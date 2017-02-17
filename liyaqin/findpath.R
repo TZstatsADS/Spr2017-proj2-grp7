@@ -2,6 +2,7 @@ library(RCurl)
 library(RJSONIO)
 library(leaflet)
 library(igraph)
+library(geosphere)
 load("./Nodes.RData")
 load("./Segments.RData")
 load("./Original Segments.RData")
@@ -25,9 +26,9 @@ geocode<-function(add){
   }
 }
 
-Nearest.Node<-function(Nodes,Coord){
-  library(geosphere)
-  D = distm(Nodes[,1:2],Coord,fun =distHaversine)[,1]
+Nearest.Node<-function(Nodes=Nodes,Coord){
+
+  D = (Nodes[,1]-Coord[1])^2+(Nodes[,2]-Coord[2])^2
   return(Nodes[which.min(D),"ID"])
 }
 
@@ -35,12 +36,12 @@ sift.station<-function(scoord,ecoord){
   station<-data.frame(lat=as.numeric(stations$Latitude),
                       lng=as.numeric(stations$Longitude))
   x<-ecoord-scoord
-  station.dir<-data.frame(lat=(station$lat-scoord[1]),lng=(station$lng-scoord[2]))
+  station.dir<-data.frame(lat=(station$lat-scoord[2]),lng=(station$lng-scoord[1]))
   station.l<-station.dir$lat^2+station.dir$lng^2
-  l<-station.dir$lat*x[1]+station.dir$lng*x[2]
+  l<-station.dir$lat*x[2]+station.dir$lng*x[1]
   l<-l/station.l
-  i1<-which.min(l)
-  i2<-which.min(l[-i1])
+  i1<-which.max(l)
+  i2<-which.max(l[-i1])
   return(c(station$lat[i1],station$lng[i1],station$lat[i2],station$lng[i2]))
 } 
 
@@ -79,32 +80,31 @@ GetLength<-function(Edge){
 
 
 Findpath<-function(start,end,Nodes=Nodes,Segments=Segments,stations=stations){
-  startCoord<-as.numeric(geocode(start)[1:2])
+  startCoord<-as.numeric(geocode(start)[2:1])
   start.Node<- Nearest.Node(Nodes,startCoord)
-  endCoord<-as.numeric(geocode(end)[1:2])
+  endCoord<-as.numeric(geocode(end)[2:1])
   end.Node <- Nearest.Node(Nodes,endCoord)
-  fuel.stat<-sift.station(startCoord,endCoord)[1:2]
+  fuel.stat<-sift.station(startCoord,endCoord)[2:1]
   station.Node<-Nearest.Node(Nodes,fuel.stat)
   
   Path1 <- Shortest(Segments,Nodes,start.Node,station.Node)
   Path2 <- Shortest(Segments,Nodes,station.Node,end.Node)
   Path <-list(Path=rbind(Path1$Path,Path2$Path),
               edge.index=c(Path1$edge.index,Path2$edge.index),
-              Nodes.Go=rbind(Path1$Nodes.Go,Path2$Nodes.GO),
+              Nodes.Go=rbind(Path1$Nodes.Go,Path2$Nodes.Go),
               Nodes.Back=rbind(Path2$Nodes.Back,Path1$Nodes.Back))
   
-  Edge.index = Path$edge.index
-  Edge = Path$Path
-  colnames(startCoord) = c("Longtitude","Latitude")
-  colnames(endCoord) = c("Longtitude","Latitude")
+  #Edge.index = Path$edge.index
+  #Edge = Path$Path
+  #colnames(startCoord) = c("Longtitude","Latitude")
+  #colnames(endCoord) = c("Longtitude","Latitude")
   Route.Go = rbind(startCoord,Path$Nodes.Go,endCoord)
   Route.Back = rbind(endCoord,Path$Nodes.Back,startCoord)
-  EDGE = Segments[Edge.index,]
-  Length = GetLength(EDGE)
-  Route.Score = sum(1/Edge$Distance)/nrow(Edge)
-  return(list(Intersection.Go = Route.Go, Intersection.Back = Route.Back,Edge = EDGE ,Length = Length, Score = Route.Score,End.Point = endCoord))
-  
-  
+  #EDGE = Segments[Edge.index,]
+  #Length = GetLength(EDGE)
+  #Route.Score = sum(1/Edge$Distance)/nrow(Edge)
+  #,Edge = EDGE ,Length = Length, Score = Route.Score,End.Point = endCoord))
+  return(list(go=Route.Go,back=Route.Back))
 }
 
 
