@@ -5,7 +5,7 @@
 # Find out more about building applications with Shiny here:
 # 
 #    http://shiny.rstudio.com/
-#
+
 
 library(shiny)
 library(leaflet)
@@ -21,15 +21,11 @@ header <- dashboardHeader(
 
 
 body<-dashboardBody(
-<<<<<<< HEAD
-=======
-  
->>>>>>> refs/remotes/origin/YiXiang
+
   tabItems(
     #First Tab Item
     tabItem(tabName = "routefinder",
             fluidRow(
-<<<<<<< HEAD
                      box(width = NULL, solidHeader = TRUE,
                          leafletOutput("mymap", height = 500)
                      )
@@ -40,24 +36,6 @@ body<-dashboardBody(
             h2('This is the tab for statistical analysis'))
     
   ))
-
-=======
-              box(width = NULL, solidHeader = TRUE,
-                  leafletOutput("mymap", height = 500)
-              )
-            )
-    ),
-    
-    
-    tabItem(tabName = "statanalysis",
-            h2('This is the tab for statistical analysis'))
-  ))
-
-
-
-
-
->>>>>>> refs/remotes/origin/YiXiang
 
 
 sidebar<-dashboardSidebar(
