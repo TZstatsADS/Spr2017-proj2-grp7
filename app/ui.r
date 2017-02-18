@@ -18,23 +18,18 @@ header <- dashboardHeader(
   titleWidth = 450
 )
 
-# USAcoord<-as.numeric(geocode("united states"))
-# ## Define UI for application that draws a histogram
-# points_starts<-data.frame(lon=-74,lat=40.7)
-# points_end<-data.frame(lon=-100,lat=30)
-# shinyUI(fluidPage(
-#   textInput("Origin", label = h3("Where do you want to start?"), value = "start point"),
-#   hr(),
-#   fluidRow(column(3, verbatimTextOutput("value"))),
-#     leafletOutput("mymap")
-#   )
-# )
+
 
 body<-dashboardBody(
+<<<<<<< HEAD
+=======
+  
+>>>>>>> refs/remotes/origin/YiXiang
   tabItems(
     #First Tab Item
     tabItem(tabName = "routefinder",
             fluidRow(
+<<<<<<< HEAD
                      box(width = NULL, solidHeader = TRUE,
                          leafletOutput("mymap", height = 500)
                      )
@@ -46,6 +41,23 @@ body<-dashboardBody(
     
   ))
 
+=======
+              box(width = NULL, solidHeader = TRUE,
+                  leafletOutput("mymap", height = 500)
+              )
+            )
+    ),
+    
+    
+    tabItem(tabName = "statanalysis",
+            h2('This is the tab for statistical analysis'))
+  ))
+
+
+
+
+
+>>>>>>> refs/remotes/origin/YiXiang
 
 
 sidebar<-dashboardSidebar(
@@ -55,7 +67,8 @@ sidebar<-dashboardSidebar(
   )
 )
 
+
+
 dashboardPage(header,
               sidebar,
               body)
-
