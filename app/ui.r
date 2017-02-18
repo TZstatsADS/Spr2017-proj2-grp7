@@ -31,20 +31,27 @@ header <- dashboardHeader(
 # )
 
 body<-dashboardBody(
-    fluidRow(
-      column(width = 9,
-             box(width = NULL, solidHeader = TRUE,
-                 leafletOutput("mymap", height = 500)
-             )
-             )
-      )
-    )
+  tabItems(
+    #First Tab Item
+    tabItem(tabName = "routefinder",
+            fluidRow(
+                     box(width = NULL, solidHeader = TRUE,
+                         leafletOutput("mymap", height = 500)
+                     )
+              )
+            ),
+  
+    tabItem(tabName = "statanalysis",
+            h2('This is the tab for statistical analysis'))
+    
+  ))
+
 
 
 sidebar<-dashboardSidebar(
   sidebarMenu(
-    menuItem("RouteFinder", tabName = "Find a Route", icon = icon("map-marker")),
-    menuItem("StatAnalysis", tabName = "Data", icon = icon("signal"))
+    menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker")),
+    menuItem("StatAnalysis", tabName = "statanalysis", icon = icon("signal"))
   )
 )
 
