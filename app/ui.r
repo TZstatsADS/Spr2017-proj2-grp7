@@ -1,40 +1,54 @@
-library(shiny)
+#
+# This is the user-interface definition of a Shiny web application. You can
+# run the application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+# 
+#    http://shiny.rstudio.com/
+#
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("2009 Manhattan Housing Sales"),
-  
-  # Sidebar with a selector input for neighborhood
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("nbhd", label = h5("Choose a Manhattan Neighborhood"), 
-                         choices = list("all neighborhoods"=0,
-                                        "Central Harlem"=1, 
-                                        "Chelsea and Clinton"=2,
-                                        "East Harlem"=3, 
-                                        "Gramercy Park and Murray Hill"=4,
-                                        "Greenwich Village and Soho"=5, 
-                                        "Lower Manhattan"=6,
-                                        "Lower East Side"=7, 
-                                        "Upper East Side"=8, 
-                                        "Upper West Side"=9,
-                                        "Inwood and Washington Heights"=10), 
-                         selected = 0)
-      #sliderInput("p.range", label=h3("Price Range (in thousands of dollars)"),
-      #            min = 0, max = 20000, value = c(200, 10000))
-    ),
-    # Show two panels
-    mainPanel(
-      #h4(textOutput("text")),
-      h3(code(textOutput("text1"))),
-      tabsetPanel(
-        # Panel 1 has three summary plots of sales. 
-        tabPanel("Sales summary", plotOutput("distPlot")), 
-        # Panel 2 has a map display of sales' distribution
-        tabPanel("Sales map", plotOutput("distPlot1")))
+library(shiny)
+library(leaflet)
+library(ggmap)
+library(ggplot2)
+library(shinydashboard)
+
+header <- dashboardHeader(
+  title = "How New York fill while driving",
+  titleWidth = 450
+)
+
+# USAcoord<-as.numeric(geocode("united states"))
+# ## Define UI for application that draws a histogram
+# points_starts<-data.frame(lon=-74,lat=40.7)
+# points_end<-data.frame(lon=-100,lat=30)
+# shinyUI(fluidPage(
+#   textInput("Origin", label = h3("Where do you want to start?"), value = "start point"),
+#   hr(),
+#   fluidRow(column(3, verbatimTextOutput("value"))),
+#     leafletOutput("mymap")
+#   )
+# )
+
+body<-dashboardBody(
+    fluidRow(
+      column(width = 9,
+             box(width = NULL, solidHeader = TRUE,
+                 leafletOutput("mymap", height = 500)
+             )
+             )
+      )
     )
- )
-))
+
+
+sidebar<-dashboardSidebar(
+  sidebarMenu(
+    menuItem("RouteFinder", tabName = "Find a Route", icon = icon("map-marker")),
+    menuItem("StatAnalysis", tabName = "Data", icon = icon("signal"))
+  )
+)
+
+dashboardPage(header,
+              sidebar,
+              body)
 
