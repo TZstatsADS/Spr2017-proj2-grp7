@@ -3,12 +3,12 @@ library(RJSONIO)
 library(leaflet)
 library(igraph)
 library(geosphere)
-load("../lib/Nodes.RData")
-load("../lib/Segments.RData")
-load("../lib/Original Segments.RData")
+load("../data/Nodes.RData")
+load("../data/Segments.RData")
+load("../data/Original Segments.RData")
 
 
-stations<-read.csv("../lib/data.csv",header=TRUE)
+stations<-read.csv("../data/data.csv",header=TRUE)
 
 geocode<-function(add){
   root<-"https://maps.google.com/maps/api/geocode/"
