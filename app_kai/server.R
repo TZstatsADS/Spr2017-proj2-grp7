@@ -1,13 +1,13 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-#
 
+  #
+  # This is the server logic of a Shiny web application. You can run the 
+  # application by clicking 'Run App' above.
+  #
+  # Find out more about building applications with Shiny here:
+  # 
+  #    http://shiny.rstudio.com/
+  #
+  #
 library(shiny)
 library(leaflet)
 library(ggmap)
@@ -43,10 +43,10 @@ end.coord<-as.numeric(geocode(end)[2:1])
 point<-data.frame(long=c(start.coord[1],end.coord[1]),lat=c(start.coord[2],end.coord[2]))
 
 shinyServer(function(input, output) {
-#-----------------------------------------------------------------------------------------------------------  
+  #-----------------------------------------------------------------------------------------------------------  
   output$mymap <- renderLeaflet({
-      leaflet() %>%
-     # setView(lng=-95.7, lat=37.1, zoom=4 )%>%
+    leaflet() %>%
+      # setView(lng=-95.7, lat=37.1, zoom=4 )%>%
       addTiles( urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
                 attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>% 
       addMarkers(data=point) %>%
@@ -55,7 +55,7 @@ shinyServer(function(input, output) {
   
   
   
-### KAI's code begins!
+  ### KAI's code begins!
   int_data <- reactive({
     
     range_year_v <- c(1970,input$animationslider)
@@ -68,118 +68,127 @@ shinyServer(function(input, output) {
     rownames(df_fuel_year_int) <- selected_years_v
     df_fuel_year_int$Year <- factor(selected_years_v)
     
+
     ### comparison part
     table_fuel_state_int <- apply(table_grow_afs[, selected_years, ], c(3,1), sum)
     df_fuel_state_int <- data.frame(table_fuel_state_int)
     df_fuel_state_int$SUM <- rowSums(df_fuel_state_int)
     df_fuel_state_int$state <- rownames(df_fuel_state_int)
     df_fuel_state_int$state2 <- states_full
-  
+    
+    color_max <- data.frame(apply(table_grow_afs, c(3,1), sum))
+    color_max$SUM <- rowSums(color_max)
+    
     ### Choose a column to compare 
-    if (input$fuel_type1 == "ALL")
+    if (input$fuel_type1 == "ALL"){
       df_fuel_state_int$tempt <- df_fuel_state_int[,8]
-    else
-      df_fuel_state_int$tempt <- df_fuel_state_int[,input$fuel_type1 == colnames(df_fuel_state_int)]
+      color_max <- max(color_max[,8])
+      colorset <- "YlOrRd"
+    }
+      
+    else{
+      selected_set <- which(input$fuel_type1 == colnames(df_fuel_state_int))
+      df_fuel_state_int$tempt <- df_fuel_state_int[,selected_set]
+      df_fuel_state_int <- df_fuel_state_int[order(df_fuel_state_int$state2),]
+      color_max <- max(color_max[,selected_set])
+      colorset <- kaicolorset[selected_set]
+#      colorset <- "Oranges"
+       }
+      
     
-    df_fuel_state_int <- df_fuel_state_int[order(df_fuel_state_int$state2),]
     
-    if (input$index_scale == "By Population")
+    if (input$index_scale == "By Population"){
       df_fuel_state_int$tempt <- df_fuel_state_int$tempt / df_pop_state$value
-   
-
+      color_max <- max(df_fuel_state_int$tempt)
+    }
+    if (input$index_aim == "Compare different states"){
+      color_max <- max(df_fuel_state_int$tempt)
+    }
+    
     state_rank <- order(df_fuel_state_int$tempt, decreasing = T)
     
     list(YEAR = selected_years_v, 
          DATA_trend1 = df_fuel_year_int, 
          DATA_statecompare = df_fuel_state_int,
-         DATA_ranking = df_fuel_state_int[state_rank,]
-        )
-    })
-  
-  
-  
+         DATA_ranking = df_fuel_state_int[state_rank,],
+         COLORMAX1 = color_max,
+         COLORMAX2 = colorset
+    )
+  })
+
   
   output$statecompare1 <- renderPlotly({
-    
-    int_data()$DATA_statecompare %>%
-      plot_geo(locationmode = 'USA-states',
-               hoverinfo = "location+text", frame = ~Year) %>%
-      ### ALL
-      add_trace(
-        z = ~tempt, text = ~paste(state2,':<br>',tempt), locations = ~state,
-        color = ~tempt, colors = 'Blues', visible = T, 
-        showscale = T
-      ) %>%
-       colorbar(title = "# Stations") %>%
-      layout(
-        title = 'Fuel Stations Distribution(Accumulative)',
-        geo = g
-      ) %>%
-      animation_opts(1000, easing = "elastic") %>%
-      animation_button(
-        x = 1, xanchor = "right", y = 0, yanchor = "bottom"
-      ) %>%
-      animation_slider(
-        currentvalue = list(prefix = "Year ", font = list(color="red"))
-      )
-    
-        
-  })
+      int_data()$DATA_statecompare %>%
+        plot_geo(locationmode = 'USA-states',
+               hoverinfo = "location+text") %>%
+        ### ALL
+        add_trace(
+          z = ~tempt, text = ~paste(state2,':<br>',tempt), locations = ~state,
+          color = ~tempt, colors = int_data()$COLORMAX2, visible = T, 
+          showscale = T
+        ) %>%
+        colorbar(title = "# Stations",
+                 len = 1,
+                 limits = c(1,int_data()$COLORMAX1)) %>%
+        layout(
+          title = 'Fuel Stations Distribution(Accumulative)',
+          geo = g)
+    })
   
   output$statecompare2 <- renderPlotly({
-
-      int_data()$DATA_ranking %>%
+    
+    int_data()$DATA_ranking %>%
       plot_ly(x = ~ factor(state, levels = state)[1:10],
               y = ~tempt[1:10], type = 'bar', text =~factor(state, levels = state)[1:10],
-                 marker = list(color = 'rgb(58, 107, 107)',
-                               line = list(color = 'rgb(58,48,107)', width = 1.5))) %>%
+              marker = list(color = 'rgb(58, 107, 107)',
+                            line = list(color = 'rgb(58,48,107)', width = 1.5))) %>%
       layout(title = "TOP10 States(Accumulative Number)",
              xaxis = list(title = ""),
              yaxis = list(title = "")
       )
-  
+    
   })
   
   
- 
-   output$trend1 <- renderPlotly({
-     
-
-       int_data()$DATA_trend1 %>%
-       plot_ly(x = ~Year, y = ~BD, type = 'bar', name = 'BD', visible = T) %>%
-       add_trace(y = ~CNG, name = 'CNG', visible = T) %>%
-       add_trace(y = ~E85, name = 'E85', visible = T) %>%
-       add_trace(y = ~ELEC, name = 'ELEC', visible = T) %>%
-       add_trace(y = ~HY, name = 'HY', visible = T) %>%
-       add_trace(y = ~LNG, name = 'LNG', visible = T) %>%
-       add_trace(y = ~LPG, name = 'LPG', visible = T) %>%
-       
-       layout(
-         title = "the Number of Fuel Stations",
-         xaxis = list(title = ''),
-         yaxis = list(title = '# Alternative Fuel Stations'), 
-         barmode = 'stack'
-         
-       )
-
-   })
   
- 
+  output$trend1 <- renderPlotly({
+    
+    
+    int_data()$DATA_trend1 %>%
+      plot_ly(x = ~Year, y = ~BD, type = 'bar', name = 'BD', visible = T) %>%
+      add_trace(y = ~CNG, name = 'CNG', visible = T) %>%
+      add_trace(y = ~E85, name = 'E85', visible = T) %>%
+      add_trace(y = ~ELEC, name = 'ELEC', visible = T) %>%
+      add_trace(y = ~HY, name = 'HY', visible = T) %>%
+      add_trace(y = ~LNG, name = 'LNG', visible = T) %>%
+      add_trace(y = ~LPG, name = 'LPG', visible = T) %>%
+      
+      layout(
+        title = "the Number of Fuel Stations",
+        xaxis = list(title = ''),
+        yaxis = list(title = '# Alternative Fuel Stations'), 
+        barmode = 'stack'
+        
+      )
+    
+  })
   
-### KAI -1 
+  
+  
+  ### KAI -1 
   
 })
-  
+
 ##we can use leafletproxy to modify existing maps.
-  # observe({
-  #   leafletProxy("mymap") %>% addMarkers(lng=as.numeric(input$points_starts[[1]]),lat=as.numeric(input$points_starts[[2]]))
-  #   leafletProxy("mymap") %>% addMarkers(lng=as.numeric(input$points_end[[1]]),lat=as.numeric(input$points_end[[2]]))
-  # })
-  
+# observe({
+#   leafletProxy("mymap") %>% addMarkers(lng=as.numeric(input$points_starts[[1]]),lat=as.numeric(input$points_starts[[2]]))
+#   leafletProxy("mymap") %>% addMarkers(lng=as.numeric(input$points_end[[1]]),lat=as.numeric(input$points_end[[2]]))
+# })
+
 
 
 ### Kai ----------------
 
-  
 
-### Kai __________
+
+### Kai __________ 
