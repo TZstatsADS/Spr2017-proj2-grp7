@@ -103,7 +103,7 @@ shinyServer(function(input, output) {
     
     int_data()$DATA_statecompare %>%
       plot_geo(locationmode = 'USA-states',
-               hoverinfo = "location+text") %>%
+               hoverinfo = "location+text", frame = ~Year) %>%
       ### ALL
       add_trace(
         z = ~tempt, text = ~paste(state2,':<br>',tempt), locations = ~state,
@@ -114,7 +114,15 @@ shinyServer(function(input, output) {
       layout(
         title = 'Fuel Stations Distribution(Accumulative)',
         geo = g
+      ) %>%
+      animation_opts(1000, easing = "elastic") %>%
+      animation_button(
+        x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+      ) %>%
+      animation_slider(
+        currentvalue = list(prefix = "Year ", font = list(color="red"))
       )
+    
         
   })
   

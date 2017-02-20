@@ -38,6 +38,9 @@ for (i in 1:50){
   states_full <- replace(states_full,  states_full== ABBR[i], FULL[i])
 }
 
+
+
+
 # sort(FULL)
 # grow_afs <- grow_afs[grow_afs$State!="DC",]
 # 
@@ -58,6 +61,27 @@ data(df_pop_state)
 df_pop_state$region[9] <- "DC"
 df_pop_state <- df_pop_state[order(df_pop_state$region),]
 rownames(df_pop_state) <- 1:51
+
+
+
+folder_path_kai <- "../data/vehicle_data/"
+temp <- list.files(path = folder_path_kai, pattern = "*.csv")
+temp <- paste(folder_path_kai, temp, sep = "")
+ca_vehicle = lapply(temp, read.csv, header = T)
+sapply(ca_vehicle, colnames, c("Year","Vehicles","Comsumption"))
+
+ca_vehicle_df <- ca_vehicle[[1]]
+colnames(ca_vehicle_df) <- c("Year", "Vehicles", "Consumptions")
+ca_vehicle_df$Type = "CNG"
+
+for (i in 2:6){
+  temp_df <- ca_vehicle[[i]]
+  colnames(temp_df) <- c("Year", "Vehicles", "Consumptions")
+  temp_df$Type = substr(temp[i],22,24)
+  ca_vehicle_df <- rbind(ca_vehicle_df, temp_df)
+}
+
+
 
 
 ### p2 location differences 
@@ -169,11 +193,11 @@ rownames(df_pop_state) <- 1:51
 #  data.frame(table_grow_afs[,"1971",])
 # 
 # 
-# data(gapminder, package = "gapminder")
-# gg <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
-#   geom_point(aes(size = pop, frame = year, ids = country)) +
-#   scale_x_log10()
-# ggplotly(gg)
+data(gapminder, package = "gapminder")
+gg <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
+  geom_point(aes(size = pop, frame = year)) +
+  scale_x_log10()
+ggplotly(gg)
 
 
 # 
@@ -189,38 +213,48 @@ rownames(df_pop_state) <- 1:51
 # ani_df
 # 
 # 
-# base <- ani_df %>%
-#   plot_ly(x = ~Year, y = ~log(Total), size = ~(Total), 
-#           text = ~State, hoverinfo = "text") %>%
-#   layout() %>%
-#   add_markers(color = ~Fuel, frame = ~Year, ids = ~State) %>%
-#   animation_opts(1000, easing = "elastic") %>%
-#   animation_button(
-#     x = 1, xanchor = "right", y = 0, yanchor = "bottom"
-#   ) %>%
-#   animation_slider(
-#     currentvalue = list(prefix = "Year ", font = list(color="red"))
-#   )
-# 
-# 
-# base
-# find_info(2016,"CA")
-# 
 
-# folder_path_kai <- "../data/vehicle_data/"
-# temp <- list.files(path = folder_path_kai, pattern = "*.csv")
-# temp <- paste(folder_path_kai, temp, sep = "")
-# ca_vehicle = lapply(temp, read.csv, header = T)
-# sapply(ca_vehicle, colnames, c("Year","Vehicles","Comsumption"))
-# 
-# ca_vehicle_df <- ca_vehicle[[1]]
-# colnames(ca_vehicle_df) <- c("Year", "Vehicles", "Consumptions")
-# ca_vehicle_df$Type = "CNG"
-# 
-# for (i in 2:6){
-#   temp_df <- ca_vehicle[[i]]
-#   colnames(temp_df) <- c("Year", "Vehicles", "Consumptions")
-#   temp_df$Type = substr(temp[i],22,24)
-#   ca_vehicle_df <- rbind(ca_vehicle_df, temp_df)
-# }
-#   
+df_fake <- data.frame(Year = 1995:2015, 
+                      Prop = runif(21)*40,
+                      Vehicle = rnorm(21,10000,2000),
+                      Station = rnorm(21,10000,2000),
+                      Col = c(rep(c("Green","Red"),10),"Red")
+                      )
+
+
+p33 <- plot_ly(df_fake, x = ~Station, y = ~Vehicle, text = ~Year, 
+               type = 'scatter', mode = 'markers', frame = ~Year,
+             marker = list(size = ~Prop, opacity = 0.5, 
+                           color = ~Col)) %>%
+  layout(title = 'Gender Gap in Earnings per University',
+         xaxis = list(showgrid = T),
+         yaxis = list(showgrid = T)) %>%
+  animation_opts(1000, easing = "elastic") %>%
+  animation_button(
+    x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+  ) %>%
+  animation_slider(
+    currentvalue = list(prefix = "Year ", font = list(color="red"))
+  )
+p33
+
+
+base <- df_fake %>%
+  plot_ly(x = ~Station, y = ~Vehicle, size = ~(Prop),
+          hoverinfo = "text", trace = Year) %>%
+  layout() %>%
+  add_markers(color = ~Fuel, frame = ~Year, ids = ~State) %>%
+  animation_opts(1000, easing = "elastic") %>%
+  animation_button(
+    x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+  ) %>%
+  animation_slider(
+    currentvalue = list(prefix = "Year ", font = list(color="red"))
+  )
+
+
+base
+find_info(2016,"CA")
+
+
+
