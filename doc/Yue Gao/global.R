@@ -1,12 +1,4 @@
----
-title: "R Notebook"
-output: html_notebook
----
-
-
-
-
-```{r}
+library(plyr)
 
 vehicles<-read.csv("vehicles.csv")
 
@@ -20,11 +12,7 @@ vehdata<-data.frame(
   fuelcost1=vehicles$fuelCost08,fuelcost2=vehicles$fuelCostA08,
   year=vehicles$year)
 
-head(vehdata)
 
-```
-
-```{r}
 totaltype=unique(vehdata$fueltype)
 makelist=unique(vehdata$manufacturer)
 singlefuel=vehdata[vehdata$fueltype2=="",]
@@ -38,29 +26,8 @@ mixedfuel.avg=ddply(mixedfuel,.(fueltype),summarize,savespend=mean(savespend),
   citympg=mean(c(citympg1,citympg2)),combmpg=mean(c(combmpg1,combmpg2)),
   highwaympg=mean(c(hw1,hw2)),co2=mean(c(co2.1,co2.2)),fuelcost=mean(c(fuelcost1,fuelcost2)))
 
-
 fuel.avg=rbind(singlefuel.avg,mixedfuel.avg)
 
 
-barplot(fuel.avg$savespend,main="Save/Spend on fuel costs in five years",horiz=TRUE,names.arg=fuel.avg$fueltype,las=1,beside=TRUE)
-mpg=cbind(fuel.avg$combmpg,fuel.avg$citympg,fuel.avg$highwaympg)
-mpg=t(mpg)
-barplot(mpg,main="MPG for different fuels",xlab="fuels",col=c("darkblue","red","yellow"),beside=TRUE,names.arg=fuel.avg$fueltype,legend=c("combined MPG","city MPG","highway MPG"))
-
-barplot(fuel.avg$co2,names.arg=fuel.avg$fueltype)
-barplot(fuel.avg$fuelcost,names.arg=c(1:13))
-
-```
-
-
-
-
-
-
-```{r}
-runApp("~/GitHub/Spr2017-proj2-grp7/doc/Yue Gao")
-rsconnect::deployApp("YueGao_v1.Rmd")
- 
-```
 
 

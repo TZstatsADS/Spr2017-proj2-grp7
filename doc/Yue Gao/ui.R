@@ -24,18 +24,13 @@ fluidPage(
   
   uiOutput("model1"),
   
-  sliderInput("year1", label = "Select year range:",
-              min = 1984, max = 2018, value = c(2010,2017), step = 1),
-  
   h4("Vehicle 2:"),
   
   selectizeInput("make2", label = "Select the manufacturtor:",
               choices = makelist,selected = "Volvo"),
   
-  uiOutput("model2"),
-  
-  sliderInput("year2", label = "Select year range:",
-            min = 1984, max = 2018, value = c(2010,2017), step = 1)
+  uiOutput("model2")
+
 )
 ),
 
@@ -49,8 +44,7 @@ fluidPage(
     )
   ),
   
-  wellPanel(DT::dataTableOutput("table1")),
-  wellPanel(DT::dataTableOutput("table2"))
+  wellPanel(tableOutput("table"))
   )
 
 )
