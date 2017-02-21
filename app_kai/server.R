@@ -20,7 +20,7 @@ library(data.table)
 
 ## Kai's edit
 library(dplyr)
-library(reshape2)
+library(reshape2) 
 library(UScensus2010)
 library(choroplethr)
 #library(plotly)
@@ -85,7 +85,7 @@ shinyServer(function(input, output) {
       df_fuel_state_int$tempt <- df_fuel_state_int[,8]
       color_max <- max(color_max[,8])
       colorset <- "YlOrRd"
-    }
+    }  
       
     else{
       selected_set <- which(input$fuel_type1 == colnames(df_fuel_state_int))
