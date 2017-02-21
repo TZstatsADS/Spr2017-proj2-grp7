@@ -65,10 +65,38 @@ rownames(df_pop_state) <- 1:51
 ###
 kaicolorset <- c("Reds","YlOrBr","YlGn","PuBu", "PuRd", "Purples", "Oranges")
 # 
-# folder_path_kai <- "../data/vehicle_data/"
-# temp <- list.files(path = folder_path_kai, pattern = "*.csv")
-# temp <- paste(folder_path_kai, temp, sep = "")
-# ca_vehicle = lapply(temp, read.csv, header = T)
+ folder_path_kai <- "../data/vehicle_station/"
+ temp <- list.files(path = folder_path_kai, pattern = "*.csv")
+ temp <- paste(folder_path_kai, temp, sep = "")
+ vehicle_list <- lapply(temp, read.csv, header = T, stringsAsFactors = F)
+ vehicle_length <- sapply(vehicle_list, nrow)
+ vehicle_total <-
+   rbind(vehicle_list[[1]],vehicle_list[[2]],
+         vehicle_list[[3]],vehicle_list[[4]],
+         vehicle_list[[5]],vehicle_list[[6]])
+ vehicle_df <- ddply(vehicle_total, .(Year, Fuel.Type), function(df){
+   return(sum(df$Number.of.Vehicles))
+ })
+vehicle_df
+ name_fuel_vehicle <- substr(vehicle_df$Fuel, 
+                             nchar(vehicle_df$Fuel)-3, 
+                             nchar(vehicle_df$Fuel)-1)
+ 
+ name_fuel_vehicle <- replace(name_fuel_vehicle, name_fuel_vehicle=="EVC", "ELEC")
+ name_fuel_vehicle <- replace(name_fuel_vehicle, name_fuel_vehicle=="HYD", "HY")
+ year_vehicle <- as.character(vehicle_df$Year)
+ fuel_vehicle <- mapply(function(Year, type){
+                                      return(table_fuel_year[Year,type])
+                                            }, 
+                        year_vehicle, 
+                        as.vector(name_fuel_vehicle))
+  vehicle_df$Fuel <- fuel_vehicle
+  vehicle_df$Type <- name_fuel_vehicle 
+  vehicle_df_final <- data.frame(Year = vehicle_df$Year,
+                                 Type = vehicle_df$Type,
+                                 Vehicle = vehicle_df$V1,
+                                 Fuel = vehicle_df$Fuel) 
+  
 # sapply(ca_vehicle, colnames, c("Year","Vehicles","Comsumption"))
 # 
 # ca_vehicle_df <- ca_vehicle[[1]]
@@ -214,30 +242,32 @@ kaicolorset <- c("Reds","YlOrBr","YlGn","PuBu", "PuRd", "Purples", "Oranges")
 # ani_df
 # 
 # # 
-# 
-# df_fake <- data.frame(Year = 1995:2015, 
-#                       Prop = runif(21)*40,
-#                       Vehicle = rnorm(21,10000,2000),
-#                       Station = rnorm(21,10000,2000),
-#                       Col = c(rep(c("Green","Red"),10),"Red")
-#                       )
-# 
-# 
-# p33 <- plot_ly(df_fake, x = ~Station, y = ~Vehicle, text = ~Year, 
-#                type = 'scatter', mode = 'markers', frame = ~Year,
-#              marker = list(size = ~Prop, opacity = 0.5, 
-#                            color = ~Col)) %>%
-#   layout(title = 'Gender Gap in Earnings per University',
-#          xaxis = list(showgrid = T),
-#          yaxis = list(showgrid = T)) %>%
-#   animation_opts(1000, easing = "elastic") %>%
-#   animation_button(
-#     x = 1, xanchor = "right", y = 0, yanchor = "bottom"
-#   ) %>%
-#   animation_slider(
-#     currentvalue = list(prefix = "Year ", font = list(color="red"))
-#   )
-# p33
+
+
+
+df_fake <- data.frame(Year = 1995:2015,
+                      Prop = runif(21)*40,
+                      Vehicle = rnorm(21,10000,2000),
+                      Station = rnorm(21,10000,2000),
+                      Col = c(rep(c("Green","Red"),10),"Red")
+                      )
+
+
+p33 <- plot_ly(vehicle_df_final, x = ~Fuel, y = ~Vehicle, text = ~Fuel,
+               type = 'scatter', mode = 'markers', frame = ~Year,
+             marker = list(size = ~20, opacity = 0.5,
+                           color = ~Type)) %>%
+  layout(title = 'Gender Gap in Earnings per University',
+         xaxis = list(showgrid = T),
+         yaxis = list(showgrid = T)) %>%
+  animation_opts(1000, easing = "elastic") %>%
+  animation_button(
+    x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+  ) %>%
+  animation_slider(
+    currentvalue = list(prefix = "Year ", font = list(color="red"))
+  )
+p33
 # 
 # # 
 # # base <- df_fake %>%

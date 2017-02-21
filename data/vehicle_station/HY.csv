@@ -1,0 +1,138 @@
+Year,Fuel Type,State,Number of Vehicles,Fuel Consumed,Weight Class,Vehicle Type,Engine Configuration,Fleet Estimates,ST
+2014,Hydrogen (HYD),California,16,32,Heavy Duty,Buses,Non-dedicated,Transit Agencies,CA
+2014,Hydrogen (HYD),California,9,7,Light Duty,SUVs,Dedicated,State Agencies,CA
+2014,Hydrogen (HYD),California,2,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,CA
+2014,Hydrogen (HYD),California,0,0,Light Duty,SUVs,Dedicated,Federal Agencies,CA
+2014,Hydrogen (HYD),Hawaii,0,0,Light Duty,SUVs,Dedicated,Federal Agencies,HI
+2014,Hydrogen (HYD),Hawaii,3,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,HI
+2014,Hydrogen (HYD),Ohio,3,2,Light Duty,Automobiles (Compact),Non-dedicated,State Agencies,OH
+2014,Hydrogen (HYD),South Carolina,1,1,Heavy Duty,Buses,Dedicated,State Agencies,SC
+2013,Hydrogen (HYD),Alabama,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AL
+2013,Hydrogen (HYD),Alaska,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AK
+2013,Hydrogen (HYD),Arizona,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AZ
+2013,Hydrogen (HYD),Arkansas,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AR
+2013,Hydrogen (HYD),California,0,0,Light Duty,SUVs,Dedicated,Federal Agencies,CA
+2013,Hydrogen (HYD),California,2,2,Light Duty,Automobiles (Compact),Non-dedicated,Electricity Providers,CA
+2013,Hydrogen (HYD),California,4,3,Light Duty,SUVs,Non-dedicated,State Agencies,CA
+2013,Hydrogen (HYD),California,4,3,Light Duty,SUVs,Dedicated,State Agencies,CA
+2013,Hydrogen (HYD),California,14,28,Heavy Duty,Buses,Non-dedicated,Transit Agencies,CA
+2013,Hydrogen (HYD),California,2,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,CA
+2013,Hydrogen (HYD),California,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,CA
+2013,Hydrogen (HYD),Colorado,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,CO
+2013,Hydrogen (HYD),Connecticut,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,CT
+2013,Hydrogen (HYD),Delaware,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,DE
+2013,Hydrogen (HYD),District of Columbia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,DC
+2013,Hydrogen (HYD),Florida,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,FL
+2013,Hydrogen (HYD),Georgia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,GA
+2013,Hydrogen (HYD),Hawaii,0,0,Light Duty,SUVs,Dedicated,Federal Agencies,HI
+2013,Hydrogen (HYD),Hawaii,3,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,HI
+2013,Hydrogen (HYD),Hawaii,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,HI
+2013,Hydrogen (HYD),Idaho,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,ID
+2013,Hydrogen (HYD),Illinois,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,IL
+2013,Hydrogen (HYD),Indiana,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,IN
+2013,Hydrogen (HYD),Iowa,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,IA
+2013,Hydrogen (HYD),Kansas,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,KS
+2013,Hydrogen (HYD),Kentucky,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,KY
+2013,Hydrogen (HYD),Louisiana,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,LA
+2013,Hydrogen (HYD),Maine,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,ME
+2013,Hydrogen (HYD),Maryland,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MD
+2013,Hydrogen (HYD),Massachusetts,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MA
+2013,Hydrogen (HYD),Michigan,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MI
+2013,Hydrogen (HYD),Minnesota,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MN
+2013,Hydrogen (HYD),Mississippi,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MS
+2013,Hydrogen (HYD),Missouri,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MO
+2013,Hydrogen (HYD),Montana,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MT
+2013,Hydrogen (HYD),Nebraska,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NE
+2013,Hydrogen (HYD),Nevada,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NV
+2013,Hydrogen (HYD),New Hampshire,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NH
+2013,Hydrogen (HYD),New Jersey,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NJ
+2013,Hydrogen (HYD),New Mexico,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NM
+2013,Hydrogen (HYD),New York,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NY
+2013,Hydrogen (HYD),North Carolina,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NC
+2013,Hydrogen (HYD),North Dakota,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,ND
+2013,Hydrogen (HYD),Ohio,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,OH
+2013,Hydrogen (HYD),Oklahoma,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,OK
+2013,Hydrogen (HYD),Oregon,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,OR
+2013,Hydrogen (HYD),Pennsylvania,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,PA
+2013,Hydrogen (HYD),Rhode Island,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,RI
+2013,Hydrogen (HYD),South Carolina,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,SC
+2013,Hydrogen (HYD),South Carolina,1,1,Heavy Duty,Buses,Dedicated,State Agencies,SC
+2013,Hydrogen (HYD),South Dakota,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,SD
+2013,Hydrogen (HYD),Tennessee,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,TN
+2013,Hydrogen (HYD),Texas,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,TX
+2013,Hydrogen (HYD),Utah,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,UT
+2013,Hydrogen (HYD),Vermont,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,VT
+2013,Hydrogen (HYD),Virginia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,VA
+2013,Hydrogen (HYD),Washington,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WA
+2013,Hydrogen (HYD),West Virginia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WV
+2013,Hydrogen (HYD),Wisconsin,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WI
+2013,Hydrogen (HYD),Wyoming,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WY
+2012,Hydrogen (HYD),Alabama,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AL
+2012,Hydrogen (HYD),Alaska,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AK
+2012,Hydrogen (HYD),Arizona,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AZ
+2012,Hydrogen (HYD),Arkansas,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,AR
+2012,Hydrogen (HYD),California,1,0,Light Duty,Automobiles (Fullsize),Non-dedicated,State Agencies,CA
+2012,Hydrogen (HYD),California,2,2,Light Duty,Automobiles (Compact),Non-dedicated,Electricity Providers,CA
+2012,Hydrogen (HYD),California,15,30,Heavy Duty,Buses,Non-dedicated,Transit Agencies,CA
+2012,Hydrogen (HYD),California,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,CA
+2012,Hydrogen (HYD),California,1,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,CA
+2012,Hydrogen (HYD),California,0,0,Light Duty,SUVs,Dedicated,Federal Agencies,CA
+2012,Hydrogen (HYD),California,4,3,Light Duty,SUVs,Non-dedicated,State Agencies,CA
+2012,Hydrogen (HYD),California,4,3,Light Duty,SUVs,Dedicated,State Agencies,CA
+2012,Hydrogen (HYD),Colorado,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,CO
+2012,Hydrogen (HYD),Connecticut,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,CT
+2012,Hydrogen (HYD),Delaware,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,DE
+2012,Hydrogen (HYD),District of Columbia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,DC
+2012,Hydrogen (HYD),Florida,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,FL
+2012,Hydrogen (HYD),Georgia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,GA
+2012,Hydrogen (HYD),Hawaii,0,0,Light Duty,SUVs,Dedicated,Federal Agencies,HI
+2012,Hydrogen (HYD),Hawaii,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,HI
+2012,Hydrogen (HYD),Hawaii,3,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,HI
+2012,Hydrogen (HYD),Idaho,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,ID
+2012,Hydrogen (HYD),Illinois,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,IL
+2012,Hydrogen (HYD),Indiana,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,IN
+2012,Hydrogen (HYD),Iowa,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,IA
+2012,Hydrogen (HYD),Kansas,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,KS
+2012,Hydrogen (HYD),Kentucky,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,KY
+2012,Hydrogen (HYD),Louisiana,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,LA
+2012,Hydrogen (HYD),Maine,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,ME
+2012,Hydrogen (HYD),Maryland,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MD
+2012,Hydrogen (HYD),Massachusetts,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MA
+2012,Hydrogen (HYD),Michigan,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MI
+2012,Hydrogen (HYD),Minnesota,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MN
+2012,Hydrogen (HYD),Mississippi,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MS
+2012,Hydrogen (HYD),Missouri,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MO
+2012,Hydrogen (HYD),Montana,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,MT
+2012,Hydrogen (HYD),Nebraska,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NE
+2012,Hydrogen (HYD),Nevada,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NV
+2012,Hydrogen (HYD),New Hampshire,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NH
+2012,Hydrogen (HYD),New Jersey,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NJ
+2012,Hydrogen (HYD),New Mexico,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NM
+2012,Hydrogen (HYD),New York,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NY
+2012,Hydrogen (HYD),North Carolina,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,NC
+2012,Hydrogen (HYD),North Dakota,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,ND
+2012,Hydrogen (HYD),Ohio,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,OH
+2012,Hydrogen (HYD),Oklahoma,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,OK
+2012,Hydrogen (HYD),Oregon,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,OR
+2012,Hydrogen (HYD),Pennsylvania,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,PA
+2012,Hydrogen (HYD),Rhode Island,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,RI
+2012,Hydrogen (HYD),South Carolina,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,SC
+2012,Hydrogen (HYD),South Dakota,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,SD
+2012,Hydrogen (HYD),Tennessee,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,TN
+2012,Hydrogen (HYD),Texas,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,TX
+2012,Hydrogen (HYD),Utah,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,UT
+2012,Hydrogen (HYD),Vermont,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,VT
+2012,Hydrogen (HYD),Virginia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,VA
+2012,Hydrogen (HYD),Washington,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WA
+2012,Hydrogen (HYD),West Virginia,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WV
+2012,Hydrogen (HYD),Wisconsin,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WI
+2012,Hydrogen (HYD),Wyoming,0,0,Light Duty,Other Vehicles,Non-dedicated,Federal Agencies,WY
+2011,Hydrogen (HYD),California,1,0,Light Duty,SUVs,Dedicated,Federal Agencies,CA
+2011,Hydrogen (HYD),California,2,2,Light Duty,Automobiles (Compact),Non-dedicated,Electricity Providers,CA
+2011,Hydrogen (HYD),California,14,28,Heavy Duty,Buses,Non-dedicated,Transit Agencies,CA
+2011,Hydrogen (HYD),California,8,6,Light Duty,SUVs,Non-dedicated,State Agencies,CA
+2011,Hydrogen (HYD),California,1,0,Light Duty,Automobiles (Fullsize),Non-dedicated,State Agencies,CA
+2011,Hydrogen (HYD),California,2,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,CA
+2011,Hydrogen (HYD),Hawaii,0,0,Light Duty,SUVs,Dedicated,Federal Agencies,HI
+2011,Hydrogen (HYD),Hawaii,3,0,Light Duty,SUVs,Non-dedicated,Federal Agencies,HI
+2011,Hydrogen (HYD),Nevada,2,2,Light Duty,SUVs,Non-dedicated,Transit Agencies,NV
