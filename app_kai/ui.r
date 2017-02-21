@@ -6,8 +6,7 @@
   # 
   #    http://shiny.rstudio.com/
     
-  
-  library(shiny)
+library(shiny)
 library(leaflet)
 library(ggmap)
 library(ggplot2)
@@ -31,6 +30,8 @@ body<-dashboardBody(
                   leafletOutput("mymap", height = 500)
               )
             )
+            
+    ),
   
     
     tabItem(tabName = "stateanalysis",

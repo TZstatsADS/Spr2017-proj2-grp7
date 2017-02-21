@@ -326,6 +326,7 @@ vehicle_df_final2$Fuel <- as.numeric(vehicle_df_final2$Fuel)
 vehicle_df_final2$Speed <- as.numeric(vehicle_df_final2$Speed)
 vehicle_df_final2$Prop <- as.numeric(vehicle_df_final2$Prop)
 vehicle_df_final2$Type <- factor(vehicle_df_final2$Type)
+
 p34 <- vehicle_df_final2 %>%
   plot_ly(x = ~Fuel, y = ~Speed, color = ~Type, 
                size = ~Prop^(1/3) * 60, colors = kaicolorset2, 
