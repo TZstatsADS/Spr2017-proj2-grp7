@@ -18,7 +18,7 @@ header <- dashboardHeader(
   title = "How New York fill while driving",
   titleWidth = 450
 )
-
+  
 
 
 body<-dashboardBody(
@@ -31,7 +31,7 @@ body<-dashboardBody(
                   leafletOutput("mymap", height = 500)
               )
             )
-    ),
+  
     
     tabItem(tabName = "stateanalysis",
             ### KAI CHEN is responsible for the tab "StateAnalysis"

@@ -69,7 +69,7 @@ shinyServer(function(input, output) {
     rownames(df_fuel_year_int) <- selected_years_v
     df_fuel_year_int$Year <- factor(selected_years_v)
     
-
+  
     ### comparison part
     table_fuel_state_int <- apply(table_grow_afs[, selected_years, ], c(3,1), sum)
     df_fuel_state_int <- data.frame(table_fuel_state_int)
