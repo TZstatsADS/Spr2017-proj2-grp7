@@ -7,8 +7,14 @@ nrow(alt_fuel_station)
 
 ### Remove stations with no record on either open date or expected open date
 ### Then Create a new variable to give the date of opening
+
+# grow_afs <- tbl_df(alt_fuel_station)
+# grow_afs$Expected.Date
+
+
+
 grow_afs <- 
-  alt_fuel_station %>%
+  tbl_df(alt_fuel_station)  %>%
   select(Fuel.Type.Code, Expected.Date, Open.Date, State) %>%
   filter((nchar(Expected.Date)!=0)|(nchar(Open.Date)!=0))  %>% 
   mutate(Start.Date = as.Date(ifelse(nchar(Expected.Date)!=0,

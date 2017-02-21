@@ -23,7 +23,8 @@ library(dplyr)
 library(reshape2)
 library(UScensus2010)
 library(choroplethr)
-library(plotly)
+#library(plotly)
+library(tibble)
 ## Kai's edit 
 
 source("../lib/findpath.R")
