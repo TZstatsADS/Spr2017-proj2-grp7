@@ -86,16 +86,35 @@ vehicle_df
  name_fuel_vehicle <- replace(name_fuel_vehicle, name_fuel_vehicle=="HYD", "HY")
  year_vehicle <- as.character(vehicle_df$Year)
  fuel_vehicle <- mapply(function(Year, type){
-                                      return(table_fuel_year[Year,type])
-                                            }, 
+     selected_years <- as.numeric(rownames(table_fuel_year)) <= as.numeric(Year)
+     fuel_number <- sum(table_fuel_year[selected_years,type])
+     return(fuel_number)
+     }, 
                         year_vehicle, 
                         as.vector(name_fuel_vehicle))
+ 
+ fuel_vehicle_add <- mapply(function(Year, type){
+   selected_years <- as.numeric(rownames(table_fuel_year)) == as.numeric(Year)
+   fuel_number <- (table_fuel_year[selected_years,type])
+   return(fuel_number)
+ }, 
+ year_vehicle, 
+ as.vector(name_fuel_vehicle))
+ 
+ 
+ 
+  year_total <- as.numeric(tapply(fuel_vehicle, names(fuel_vehicle), sum))
+  num_year <- as.numeric(table(names(fuel_vehicle)))
+  fenmu <- rep.int(year_total, num_year)
+  prop <- fuel_vehicle / fenmu
   vehicle_df$Fuel <- fuel_vehicle
   vehicle_df$Type <- name_fuel_vehicle 
   vehicle_df_final <- data.frame(Year = vehicle_df$Year,
                                  Type = vehicle_df$Type,
                                  Vehicle = vehicle_df$V1,
-                                 Fuel = vehicle_df$Fuel) 
+                                 Fuel = vehicle_df$Fuel,
+                                 Prop =  prop
+                                 ) 
   
 # sapply(ca_vehicle, colnames, c("Year","Vehicles","Comsumption"))
 # 
@@ -243,49 +262,137 @@ vehicle_df
 # 
 # # 
 
+kaicolorset2 <- c("red","blue","orange","brown","black","green")
 
 
-df_fake <- data.frame(Year = 1995:2015,
-                      Prop = runif(21)*40,
-                      Vehicle = rnorm(21,10000,2000),
-                      Station = rnorm(21,10000,2000),
-                      Col = c(rep(c("Green","Red"),10),"Red")
-                      )
-
-
-p33 <- plot_ly(vehicle_df_final, x = ~Fuel, y = ~Vehicle, text = ~Fuel,
-               type = 'scatter', mode = 'markers', frame = ~Year,
-             marker = list(size = ~20, opacity = 0.5,
-                           color = ~Type)) %>%
-  layout(title = 'Gender Gap in Earnings per University',
-         xaxis = list(showgrid = T),
-         yaxis = list(showgrid = T)) %>%
-  animation_opts(1000, easing = "elastic") %>%
-  animation_button(
-    x = 1, xanchor = "right", y = 0, yanchor = "bottom"
-  ) %>%
-  animation_slider(
-    currentvalue = list(prefix = "Year ", font = list(color="red"))
-  )
-p33
-# 
-# # 
-# # base <- df_fake %>%
-# #   plot_ly(x = ~Station, y = ~Vehicle, size = ~(Prop),
-# #           hoverinfo = "text", trace = Year) %>%
-# #   layout() %>%
-# #   add_markers(color = ~Fuel, frame = ~Year, ids = ~State) %>%
-# #   animation_opts(1000, easing = "elastic") %>%
+# p33 <- plot_ly(vehicle_df_final, x = ~Fuel, y = ~Vehicle,text = ~Type,
+#                type = 'scatter', mode = 'markers', frame = ~Year,
+#              marker = list(size = ~30*(Prop*100)^(1/10), opacity = 0.5,
+#                            color = kaicolorset2[vehicle_df_final$Type])) %>%
+#   layout(title = 'Gender Gap in Earnings per University',
+#          xaxis = list(showgrid = T),
+#          yaxis = list(showgrid = T, type="log")) %>%
+#   animation_opts(1000, easing = "elastic") %>%
 #   animation_button(
-#     x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+#     x = 1, xanchor = "right", y = 0, yanchor = "top"
 #   ) %>%
 #   animation_slider(
 #     currentvalue = list(prefix = "Year ", font = list(color="red"))
 #   )
+# p33
+
+vehicle_df_final2 <- vehicle_df_final[order(vehicle_df_final$Type),] 
+rownames(vehicle_df_final2) <- 1:53
+vehicle_df_final2 <- rbind(vehicle_df_final2[c(1,12,17,28,32,43),],
+                           vehicle_df_final2)
+vehicle_df_final2 <- vehicle_df_final2[order(vehicle_df_final2$Type),] 
+vehicle_df_final2$Speed <- c(1,(vehicle_df_final2$Vehicle[2:59]-vehicle_df_final2$Vehicle[1:58]) / vehicle_df_final2$Vehicle[1:58])
+rownames(vehicle_df_final2) <- 1:59
+vehicle_df_final2 <- vehicle_df_final2[-c(1,13,19,31,36,48),]
+
+makeupdata <- matrix(data = c(2004, "E85", 0,0,0,0, 
+                              2004, "HY",0,0,0,0,
+                              2005, "E85", 0,0,0,0, 
+                              2005, "HY",0,0,0,0,
+                              2006, "E85", 0,0,0,0, 
+                              2006, "HY",0,0,0,0,
+                              2007, "E85", 0,0,0,0, 
+                              2007, "HY",0,0,0,0,
+                              2008, "E85", 0,0,0,0, 
+                              2008, "HY",0,0,0,0,
+                              2009, "E85", 0,0,0,0, 
+                              2009, "HY",0,0,0,0,
+                              2010, "HY",0,0,0,0), ncol = 6, byrow = T)
+
+
+
+
+makeupdata <- data.frame(makeupdata)
+colnames(makeupdata) <- c("Year","Type","Vehicle","Fuel","Prop","Speed")
+
+vehicle_df_final2 <- rbind(vehicle_df_final2, makeupdata)
+vehicle_df_final2 <- vehicle_df_final2[order(vehicle_df_final2$Type),]
+vehicle_df_final2 <- vehicle_df_final2[order(vehicle_df_final2$Year),]
+
+vehicle_df_final2$Year <- as.numeric(vehicle_df_final2$Year)
+vehicle_df_final2$Vehicle <- as.numeric(vehicle_df_final2$Vehicle)
+vehicle_df_final2$Fuel <- as.numeric(vehicle_df_final2$Fuel)
+vehicle_df_final2$Speed <- as.numeric(vehicle_df_final2$Speed)
+vehicle_df_final2$Prop <- as.numeric(vehicle_df_final2$Prop)
+vehicle_df_final2$Type <- factor(vehicle_df_final2$Type)
+p34 <- vehicle_df_final2 %>%
+  plot_ly(x = ~Fuel, y = ~Speed, color = ~Type, 
+               size = ~Prop^(1/3) * 60, colors = kaicolorset2, 
+               type = 'scatter', mode = 'markers', frame = ~Year, 
+               opacity = 0.3,
+               sizes = 60*(c(min(vehicle_df_final2$Prop), max(vehicle_df_final2$Prop)))^(1/3),
+               marker = list(symbol = 'circle', sizemode = 'diameter',
+                             line = list(width = 0.5, color = '#FFFFFF')),
+               text = ~paste(Type, ':<br>', Prop*100, '%')) %>%
+  layout(title = 'Fuel Stations vs Increasing Speed of Vehicles',
+         xaxis = list(title = 'Rate of increasing vehicles',
+                      gridcolor = 'rgb(255, 255, 255)',
+                      range = c(0, 5300),
+                      zerolinewidth = 1,
+                      ticklen = 5,
+                      gridwidth = 2),
+         yaxis = list(title = '# of Fuel Stations',
+                      gridcolor = 'rgb(255, 255, 255)',
+                      zerolinewidth = 1,
+                      ticklen = 5,
+                      gridwith = 2),
+         paper_bgcolor = 'rgb(243, 243, 243)',
+         plot_bgcolor = 'rgb(243, 243, 243)'
+  )%>%
+  animation_opts(1000, easing = "elastic") %>%
+  animation_button(
+    x = 1, xanchor = "right", y = 0, yanchor = "top"
+  ) %>%
+  animation_slider(
+    currentvalue = list(prefix = "Year ", font = list(color="red"))
+  )
+
+ 
+rownames(vehicle_df_final2) <- 1:nrow(vehicle_df_final2)
+fuel_vehicle_add3 <- fuel_vehicle_add[-c(1,2,3,4,27,33)]
+regular <- which(vehicle_df_final2$Speed ==0)
+regular <- regular[1:(length(regular)-1)]
+vehicle_df_final3 <- vehicle_df_final2[-regular,]
+
+reg_df <- data.frame(add_station = fuel_vehicle_add3, 
+                     rate_increasing = vehicle_df_final3$Speed,
+                     Type = vehicle_df_final3$Type,
+                     Year = vehicle_df_final3$Year)
+
+
+
+reg_df <- reg_df[order(reg_df$rate_increasing),]
+
+p35 <- reg_df %>% 
+  plot_ly(x = ~rate_increasing, y = ~add_station, color = ~Type, 
+          text = ~paste(Year)) %>%
+  layout(
+    xaxis = list(title = 'Rate of increasing vehicles',
+               gridcolor = 'rgb(255, 255, 255)',
+               range = c(-0.5,0.5),
+               zerolinewidth = 1,
+               ticklen = 5,
+               gridwidth = 2),
+    yaxis = list(title = 'Stations added in one year(log)',
+                 gridcolor = 'rgb(255, 255, 255)',
+                 type = "log",
+                 zerolinewidth = 1,
+                 ticklen = 5,
+                 gridwidth = 2)
+  ) 
+  
+
+# p35
+# Years_available <- unique(vehicle_df_final3$Year[selected_rows])
+# REG_FUEL_ADD <- as.numeric(table_fuel_year[as.character(Years_available),input$fuel_type_reg])
+# REG_VEH_NUM <- vehicle_df_final3$Speed[selected_rows]
 # 
 # 
-# base
-# find_info(2016,"CA")
-
-
-
+# p <- plot_ly(data = iris, x = ~Sepal.Length, y = ~Petal.Length, color = ~Species)
+# p
+# 

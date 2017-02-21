@@ -112,8 +112,7 @@ shinyServer(function(input, output) {
          DATA_statecompare = df_fuel_state_int,
          DATA_ranking = df_fuel_state_int[state_rank,],
          COLORMAX1 = color_max,
-         COLORMAX2 = colorset
-    )
+         COLORMAX2 = colorset)
   })
 
   
@@ -171,6 +170,14 @@ shinyServer(function(input, output) {
         
       )
     
+  })
+  
+  output$vehicle_animation <- renderPlotly({
+    p34
+  })
+  
+  output$vehicle_scatter <- renderPlotly({
+     p35
   })
   
   

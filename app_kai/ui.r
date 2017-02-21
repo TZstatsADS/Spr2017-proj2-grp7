@@ -121,6 +121,18 @@ body<-dashboardBody(
                 width = "12",
                 tabPanel("Overall",solidHeader = TRUE,
                          plotlyOutput("trend1"))
+              ),
+              
+              tabBox(
+                title = "Relation based on Vehicles",
+                id = "tabset5",
+                width = "12",
+                tabPanel("Animation",solidHeader = TRUE,
+                         plotlyOutput("vehicle_animation")),
+                tabPanel("Scatter Analysis",solidHeader = TRUE,
+                        
+        
+                         plotlyOutput("vehicle_scatter"))
               )
               
               
