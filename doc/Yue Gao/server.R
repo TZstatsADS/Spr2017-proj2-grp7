@@ -1,5 +1,4 @@
 library(shiny)
-library(DT)
 shinyServer(
   function(input, output,session) {
 
@@ -54,24 +53,37 @@ shinyServer(
     barplot(temp$fuelcost,names.arg=temp$fueltype)}
   })
   
-  output$table1=DT::renderDataTable(DT::datatable({
+  output$table=renderTable({
     table1=vehdata[(vehdata$manufacturer==input$make1)
-                   &(vehdata$model==input$model1 )
-                   &(vehdata$year>=input$year1[1])
-                   &(vehdata$year<=input$year1[2])
-                   ,]
-    table1
-
-  })
-  )
-  
-  output$table2=DT::renderDataTable(DT::datatable({
+                   &(vehdata$model==input$model1),]
+    table1=table1[order(-table1$year),]
+    
     table2=vehdata[(vehdata$manufacturer==input$make2)
-                   &(vehdata$model==input$model2)
-                   &(vehdata$year>=input$year2[1])
-                   &(vehdata$year<=input$year2[2])
-                   ,]
-    table2
+                   &(vehdata$model==input$model2),]
+    table2=table2[order(-table2$year),]
+    m=rbind.data.frame(table1[1,],table2[1,])
+    row.names(m)=c("Vehicle1","Vehicle2")
+    if((m$fueltype2[1]=="")&(m$fueltype2[2]=="")){
+      m=subset(m,select=c(-fueltype1,-fueltype2,-citympg2,-combmpg2,-hw2,-co2.2,-fuelcost2))
+      m=t(m)
+      m=cbind(" "=c("Manufacturer","Model","Class","Fuel Type","Save or Spend",
+                     "City MPG","Combined MPG","Highway MPG","CO2","Fuel Cost","Year"),m)
+    }else{
+      m=subset(m,select=c(-fueltype))
+      m=t(m)
+      m=cbind(" "=c("Manufacturer","Model","Class","Fuel Type 1","Fuel Type 2",
+                     "Save or Spend","City MPG1","City MPG2",
+                     "Combined MPG1","Combined MPG2",
+                     "Highway MPG1","Highway MPG2",
+                     "CO2 for Fuel1","CO2 for Fuel2",
+                     "Fuel Cost1","Fuel Cost2",
+                     "Year"),m)
+      }
+
+
+  print(m)
+    
   })
-  )
+  
+
 })
