@@ -1,3 +1,4 @@
+library(plyr)
 
 vehicles<-read.csv("vehicles.csv")
 
