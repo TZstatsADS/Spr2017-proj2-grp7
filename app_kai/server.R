@@ -23,7 +23,11 @@ library(dplyr)
 library(reshape2) 
 library(UScensus2010)
 library(choroplethr)
-#library(plotly)
+
+if(!require("devtools")) install.packages("devtools")
+devtools::install_github("ropensci/plotly",force=TRUE)
+
+library(plotly)
 library(tibble)
 ## Kai's edit 
 
