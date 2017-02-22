@@ -99,7 +99,7 @@ body<-dashboardBody(
                 tabPanel("", 
                          title = "", solidHeader = TRUE, 
                          sliderInput("animationslider", "Year control/Animation Play", 
-                                     min=1971, max=2018, value = c(1971), 1, 
+                                     min=1971, max=2018, value = c(2018), 1, 
                                      dragRange = T, 
                                      animate = animationOptions(interval = c(300,800), 
                                                                 loop = F,
