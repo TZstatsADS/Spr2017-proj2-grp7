@@ -440,3 +440,26 @@ p36 <-
   ) 
 
 
+df_state_area <- read.csv("../data/State_Areas.csv", 
+                          header = F,
+                          stringsAsFactors = F)
+
+str(df_state_area)
+areas <- df_state_area$V4
+areas <- substr(areas, 1, nchar(areas)-6)
+Areas <- as.numeric(sapply(strsplit(areas, ","), paste, collapse = ""))
+df_state_area <- data.frame(State = df_state_area$V1, 
+                            Areas_sq_km = Areas,
+                            stringsAsFactors = F)
+
+df_state_area$State[51] <- "DC"
+states_abbr <- df_state_area$State
+for (i in 1:50){
+  states_abbr <- replace(states_abbr,  states_abbr== FULL[i], ABBR[i])
+}
+df_state_area$State <- states_abbr
+df_state_area <- df_state_area[order(df_state_area$State),]
+rownames(df_state_area) <- 1:51
+
+
+

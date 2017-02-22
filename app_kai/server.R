@@ -60,34 +60,57 @@ shinyServer(function(input, output) {
   
   
   
-  ### KAI's code begins!
+  #-------- KAI's code ---------#
   int_data <- reactive({
+    
+    ### Find selected Years_ ###
     
     range_year_v <- c(1970,input$animationslider)
     selected_years <- (years_total>= range_year_v[1]) & (years_total <= range_year_v[2])
     selected_years_v <- years_total[selected_years]
     
-    ### trend part
+    
+    ### Overall Trend ###
+    
+    #### Create a dataframe: row - year,  column - fuel.type and year
     table_fuel_year_int <- table_fuel_year[selected_years,]
     df_fuel_year_int <- data.frame(table_fuel_year_int) 
-    rownames(df_fuel_year_int) <- selected_years_v
-    df_fuel_year_int$Year <- factor(selected_years_v)
-    
+    df_fuel_year_int$Year <- factor(rownames(df_fuel_year_int))
   
-    ### comparison part
+    
+    ### State Trend ###
+    
+    
+    #### Scale by areas if required
+
+    
+    expl <- ""
+    
     table_fuel_state_int <- apply(table_grow_afs[, selected_years, ], c(3,1), sum)
     df_fuel_state_int <- data.frame(table_fuel_state_int)
     df_fuel_state_int$SUM <- rowSums(df_fuel_state_int)
     df_fuel_state_int$state <- rownames(df_fuel_state_int)
     df_fuel_state_int$state2 <- states_full
     
-    color_max <- data.frame(apply(table_grow_afs, c(3,1), sum))
-    color_max$SUM <- rowSums(color_max)
+    df_color <- data.frame(apply(table_grow_afs, c(3,1), sum))
+    if (input$index_scale == "By Areas"){
+      df_fuel_state_int[,1:8] <- 10^4 * df_fuel_state_int[,1:8] / df_state_area$Areas_sq_km
+      df_color <- 10^4 * data.frame(apply(table_grow_afs, c(3,1), sum)) / df_state_area$Areas_sq_km
+      
+      ## Delete DC, or the result might be misleading
+      df_fuel_state_int <- df_fuel_state_int[-8,]
+      df_color <- df_color[-8,]
+      expl <- "; Per 10000 km^2"
+    }
+    
+    
+    df_color$SUM <- rowSums(df_color)
+    
     
     ### Choose a column to compare 
     if (input$fuel_type1 == "ALL"){
       df_fuel_state_int$tempt <- df_fuel_state_int[,8]
-      color_max <- max(color_max[,8])
+      color_max <- max(df_color[,8])
       colorset <- "YlOrRd"
     }  
       
@@ -95,24 +118,42 @@ shinyServer(function(input, output) {
       selected_set <- which(input$fuel_type1 == colnames(df_fuel_state_int))
       df_fuel_state_int$tempt <- df_fuel_state_int[,selected_set]
       df_fuel_state_int <- df_fuel_state_int[order(df_fuel_state_int$state2),]
-      color_max <- max(color_max[,selected_set])
+      color_max <- max(df_color[,selected_set])
       colorset <- kaicolorset[selected_set]
 #      colorset <- "Oranges"
        }
       
     
     
+    
+    
+    if (input$index_aim == "change with the year"){
+      color_max <- max(df_fuel_state_int$tempt)
+      map_aim <- "Mode = Same Year, " 
+    }
+    else
+      map_aim <- "Mode = Accumulation, "
+    
+    
+    
+    # if (input$index_scale == "By number of vehicles"){
+    #   df_fuel_state_int$tempt <- df_fuel_state_int$tempt / df_pop_state$value
+    #   color_max <- max(df_fuel_state_int$tempt)
+    # }
+    
+
+    
+    
     if (input$index_scale == "By Population"){
       df_fuel_state_int$tempt <- df_fuel_state_int$tempt / df_pop_state$value
       color_max <- max(df_fuel_state_int$tempt)
     }
-    if (input$index_aim == "Compare different states"){
-      color_max <- max(df_fuel_state_int$tempt)
-      map_aim <- "Mode = Same Year, " 
-      }
-    else
-      map_aim <- "Mode = Accumulation, "
-        
+    
+    
+    
+    
+    
+      
     
     state_rank <- order(df_fuel_state_int$tempt, decreasing = T)
     
@@ -123,7 +164,8 @@ shinyServer(function(input, output) {
          COLORMAX1 = color_max,
          COLORMAX2 = colorset,
          Name_fuel = input$fuel_type1,
-         MAP_SET = map_aim)
+         MAP_SET = map_aim,
+         EXPL = expl)
   })
 
   
@@ -139,9 +181,10 @@ shinyServer(function(input, output) {
         ) %>%
         colorbar(title = "# Stations",
                  len = 1,
-                 limits = c(1,int_data()$COLORMAX1)) %>%
+                 limits = c(0.001,int_data()$COLORMAX1)) %>%
         layout(
-          title = paste('Fuel Stations Distribution<br>(Fuel = ', int_data()$Name_fuel,")"),
+          title = paste('Fuel Stations Distribution<br> Fuel = ', 
+                        int_data()$Name_fuel,int_data()$EXPL),
           geo = g)
     })
   
@@ -152,7 +195,8 @@ shinyServer(function(input, output) {
               y = ~tempt[1:10], type = 'bar', text =~factor(state, levels = state)[1:10],
               marker = list(color = 'rgb(58, 107, 107)',
                             line = list(color = 'rgb(58,48,107)', width = 1.5))) %>%
-      layout(title = paste('Fuel Stations Distribution<br>(Fuel = ', int_data()$Name_fuel,")"),
+      layout(title = paste('Fuel Stations Distribution<br>Fuel = ', 
+                           int_data()$Name_fuel,int_data()$EXPL),
              xaxis = list(title = ""),
              yaxis = list(title = "")
       )

@@ -77,16 +77,16 @@ body<-dashboardBody(
                 
                 tabPanel("Scale", 
                          radioButtons("index_scale", "Choose a way of scaling", 
-                                      choices = c("None","By Area","By Population"), 
+                                      choices = c("None","By Areas","By number of vehicles"), 
                                       selected = "None", width = '75%')
                        
                 ),
-                tabPanel("Display", 
-                          radioButtons("index_aim", "Choose your aim", 
-                                      choices = c("See the growth",
-                                                  "Compare different states"
+                tabPanel("Colobar", 
+                          radioButtons("index_aim", "Let colorbar:", 
+                                      choices = c("be fixed",
+                                                  "change with the year"
                                       ), 
-                                      selected = "See the growth", width = '75%')
+                                      selected = "be fixed", width = '75%')
                          
                 )
               ),
