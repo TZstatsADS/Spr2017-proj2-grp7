@@ -24,8 +24,8 @@ library(reshape2)
 library(UScensus2010)
 library(choroplethr)
 
-if(!require("devtools")) install.packages("devtools")
-devtools::install_github("ropensci/plotly",force=TRUE)
+#if(!require("devtools")) install.packages("devtools")
+#devtools::install_github("ropensci/plotly",force=TRUE)
 
 library(plotly)
 library(tibble)
