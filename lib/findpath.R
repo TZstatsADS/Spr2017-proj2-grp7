@@ -46,6 +46,10 @@ sift.station<-function(scoord,ecoord,type,net,con){
       station<-rbind(station,station0[stations$Fuel.Type.Code==type[i],])
     }
     else{
+      if (con=="All"&net=="All") station<-rbind(station,station0[stations$Fuel.Type.Code==type[i],])
+      if (con!="All"&net=="All") station<-rbind(station,station0[stations$Fuel.Type.Code==type[i]&grepl(con,stations$EV.Connector.Types),])
+      if (con=="All"&net!="All") station<-rbind(station,station0[stations$Fuel.Type.Code==type[i]&stations$EV.Network==net,])
+      if (con!="All"&net!="All")
       station<-rbind(station,station0[stations$Fuel.Type.Code==type[i]&grepl(con,stations$EV.Connector.Types)&stations$EV.Network==net,])
     }
   }
@@ -96,7 +100,7 @@ GetLength<-function(Edge){
 
 Findpath<-function(start,end,Nodes=Nodes,Segments=Segments,stations=stations
                    ,fueltype=c("CNG","ELEC"),
-                   network="ChargePoint Network",connector="J1772"){
+                   network="All",connector="All"){
   startCoord<-as.numeric(geocode(start)[2:1])
   start.Node<- Nearest.Node(Nodes,startCoord)
   endCoord<-as.numeric(geocode(end)[2:1])
