@@ -36,7 +36,7 @@ Nearest.Node<-function(Nodes=Nodes,Coord){
   return(Nodes[which.min(D),"ID"])
 }
 
-sift.station<-function(scoord,ecoord,type){
+sift.station<-function(scoord,ecoord,type,net,con){
   station0<-data.frame(lat=as.numeric(stations$Latitude),
                       lng=as.numeric(stations$Longitude))
   m<-length(type)
@@ -46,7 +46,7 @@ sift.station<-function(scoord,ecoord,type){
       station<-rbind(station,station0[stations$Fuel.Type.Code==type[i],])
     }
     else{
-      station<-rbind(station,station0[stations$Fuel.Type.Code==type[i],])
+      station<-rbind(station,station0[stations$Fuel.Type.Code==type[i]&grepl(con,stations$EV.Connector.Types)&stations$EV.Network==net,])
     }
   }
   
@@ -95,14 +95,15 @@ GetLength<-function(Edge){
 
 
 Findpath<-function(start,end,Nodes=Nodes,Segments=Segments,stations=stations
-                   ,fueltype=c("CNG","ELEC")){
+                   ,fueltype=c("CNG","ELEC"),
+                   network="ChargePoint Network",connector="J1772"){
   startCoord<-as.numeric(geocode(start)[2:1])
   start.Node<- Nearest.Node(Nodes,startCoord)
   endCoord<-as.numeric(geocode(end)[2:1])
   end.Node <- Nearest.Node(Nodes,endCoord)
-  fuel.stat<-sift.station(startCoord,endCoord,fueltype)[2:1]
+  fuel.stat<-sift.station(startCoord,endCoord,fueltype,network,connector)[2:1]
   station.Node<-Nearest.Node(Nodes,fuel.stat)
-  fuel.stat2<-sift.station(startCoord,endCoord,fueltype)[4:3]
+  fuel.stat2<-sift.station(startCoord,endCoord,fueltype,network,connector)[4:3]
   station.Node2<-Nearest.Node(Nodes,fuel.stat2)
   
   Path1 <- Shortest(Segments,Nodes,start.Node,station.Node)
