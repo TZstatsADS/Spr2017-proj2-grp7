@@ -34,25 +34,27 @@ body<-dashboardBody(
     ),
   
     
-    tabItem(tabName = "stateanalysis",
+    tabItem(tabName = "kaichenanalysis",
             ### KAI CHEN is responsible for the tab "StateAnalysis"
-            h2('State Analysis'),
+            h2('Trend Analysis'),
             fluidRow(
               
               tabBox(
                 title = "Results on the quantity",
                 id = "tabset2",
                 width = "12",
-                tabPanel("US Map",solidHeader = TRUE,
+                tabPanel("State Map",solidHeader = TRUE,
                          plotlyOutput("statecompare1")),
-                tabPanel("Ranking",solidHeader = TRUE,
-                         plotlyOutput("statecompare2"))
+                tabPanel("State Ranking",solidHeader = TRUE,
+                         plotlyOutput("statecompare2")),
+                tabPanel("Overall Trend",solidHeader = TRUE,
+                         plotlyOutput("trend1"))
                 
               ),
               
               
               tabBox( 
-                title = "Settings",
+                title = "Map Settings",
                 # The id lets us use input$tabset1 on the server to find the current tab
                 id = "tabset1", height = "180px", width = 6,
                 # tabPanel( 
@@ -64,7 +66,7 @@ body<-dashboardBody(
                 
                 
                 tabPanel("Fuels Selections", 
-                         title = "Fuels", solidHeader = TRUE,
+                         title = "Fuels", solidHeader = T,
                          radioButtons("fuel_type1", "Choose a type of fuel to analyze", 
                                       choices = c("ALL","HY","BD","LPG","LNG","ELEC","E85","CNG"), 
                                       selected = "ALL", inline = TRUE, width = '75%')
@@ -79,7 +81,7 @@ body<-dashboardBody(
                                       selected = "None", width = '75%')
                        
                 ),
-                tabPanel("Colorbar", 
+                tabPanel("Display", 
                           radioButtons("index_aim", "Choose your aim", 
                                       choices = c("See the growth",
                                                   "Compare different states"
@@ -91,12 +93,12 @@ body<-dashboardBody(
               
               
               tabBox( 
-                title = "Animation Slider",
+                title = "Animation Center",
                 # The id lets us use input$tabset1 on the server to find the current tab
                 id = "tabset1", height = "180px", width = 6,
                 tabPanel("", 
                          title = "", solidHeader = TRUE, 
-                         sliderInput("animationslider", "Let's start an animation: ", 
+                         sliderInput("animationslider", "Year control/Animation Play", 
                                      min=1971, max=2018, value = c(1971), 1, 
                                      dragRange = T, 
                                      animate = animationOptions(interval = c(300,800), 
@@ -106,34 +108,27 @@ body<-dashboardBody(
               
               
               
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
+              # tabBox(
+              #   title = "Research on trend",
+              #   id = "tabset3",
+              #   width = "12",
+              #   tabPanel("Overall",solidHeader = TRUE,
+              #            plotlyOutput("trend1"))
+              # ),
+            
               tabBox(
-                title = "Research on trend",
-                id = "tabset3",
-                width = "12",
-                tabPanel("Overall",solidHeader = TRUE,
-                         plotlyOutput("trend1"))
-              ),
-              
-              tabBox(
-                title = "Relation based on Vehicles",
+        
+                title = "Relation with Vehicles",
                 id = "tabset5",
                 width = "12",
+                tabPanel("Scatters",solidHeader = TRUE,
+                         h5("Choose a kind of energy in the legend:"),
+                         plotlyOutput("vehicle_scatter1")),
                 tabPanel("Animation",solidHeader = TRUE,
                          plotlyOutput("vehicle_animation")),
-                tabPanel("Scatter Analysis",solidHeader = TRUE,
-                        
-        
+                tabPanel("这是什么玩意",solidHeader = TRUE,
                          plotlyOutput("vehicle_scatter"))
+             
               )
               
               
@@ -242,7 +237,7 @@ sidebar<-dashboardSidebar(
   sidebarMenu(
     menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker")),
     menuItem("Trend Analysis", tabName = "trendanalysis", icon = icon("signal")),
-    menuItem("State Analysis", tabName = "stateanalysis", icon = icon("signal"))
+    menuItem("Trend Analysis", tabName = "kaichenanalysis", icon = icon("signal"))
     
     #          menuSubItem("TrendAnalysis", tabName = "TrendAnalysis")
     

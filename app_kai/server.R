@@ -104,7 +104,11 @@ shinyServer(function(input, output) {
     }
     if (input$index_aim == "Compare different states"){
       color_max <- max(df_fuel_state_int$tempt)
-    }
+      map_aim <- "Mode = Same Year, " 
+      }
+    else
+      map_aim <- "Mode = Accumulation, "
+        
     
     state_rank <- order(df_fuel_state_int$tempt, decreasing = T)
     
@@ -113,7 +117,9 @@ shinyServer(function(input, output) {
          DATA_statecompare = df_fuel_state_int,
          DATA_ranking = df_fuel_state_int[state_rank,],
          COLORMAX1 = color_max,
-         COLORMAX2 = colorset)
+         COLORMAX2 = colorset,
+         Name_fuel = input$fuel_type1,
+         MAP_SET = map_aim)
   })
 
   
@@ -131,7 +137,7 @@ shinyServer(function(input, output) {
                  len = 1,
                  limits = c(1,int_data()$COLORMAX1)) %>%
         layout(
-          title = 'Fuel Stations Distribution(Accumulative)',
+          title = paste('Fuel Stations Distribution<br>(Fuel = ', int_data()$Name_fuel,")"),
           geo = g)
     })
   
@@ -142,7 +148,7 @@ shinyServer(function(input, output) {
               y = ~tempt[1:10], type = 'bar', text =~factor(state, levels = state)[1:10],
               marker = list(color = 'rgb(58, 107, 107)',
                             line = list(color = 'rgb(58,48,107)', width = 1.5))) %>%
-      layout(title = "TOP10 States(Accumulative Number)",
+      layout(title = paste('Fuel Stations Distribution<br>(Fuel = ', int_data()$Name_fuel,")"),
              xaxis = list(title = ""),
              yaxis = list(title = "")
       )
@@ -180,6 +186,9 @@ shinyServer(function(input, output) {
   output$vehicle_scatter <- renderPlotly({
      p35
   })
+  output$vehicle_scatter1 <- renderPlotly({
+    p36
+  })
   
   
   
@@ -200,3 +209,10 @@ shinyServer(function(input, output) {
 
 
 ### Kai __________ 
+
+
+
+
+
+
+

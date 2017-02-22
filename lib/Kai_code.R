@@ -119,7 +119,8 @@ vehicle_df
                                  Type = vehicle_df$Type,
                                  Vehicle = vehicle_df$V1,
                                  Fuel = vehicle_df$Fuel,
-                                 Prop =  prop
+                                 Prop =  prop,
+                                 add_fuel = fuel_vehicle_add
                                  ) 
   
 # sapply(ca_vehicle, colnames, c("Year","Vehicles","Comsumption"))
@@ -296,25 +297,25 @@ vehicle_df_final2$Speed <- c(1,(vehicle_df_final2$Vehicle[2:59]-vehicle_df_final
 rownames(vehicle_df_final2) <- 1:59
 vehicle_df_final2 <- vehicle_df_final2[-c(1,13,19,31,36,48),]
 
-makeupdata <- matrix(data = c(2004, "E85", 0,0,0,0, 
-                              2004, "HY",0,0,0,0,
-                              2005, "E85", 0,0,0,0, 
-                              2005, "HY",0,0,0,0,
-                              2006, "E85", 0,0,0,0, 
-                              2006, "HY",0,0,0,0,
-                              2007, "E85", 0,0,0,0, 
-                              2007, "HY",0,0,0,0,
-                              2008, "E85", 0,0,0,0, 
-                              2008, "HY",0,0,0,0,
-                              2009, "E85", 0,0,0,0, 
-                              2009, "HY",0,0,0,0,
-                              2010, "HY",0,0,0,0), ncol = 6, byrow = T)
+makeupdata <- matrix(data = c(2004, "E85", 0,0,0,0,0,
+                              2004, "HY",0,0,0,0,0,
+                              2005, "E85", 0,0,0,0,0, 
+                              2005, "HY",0,0,0,0,0,
+                              2006, "E85", 0,0,0,0,0, 
+                              2006, "HY",0,0,0,0,0,
+                              2007, "E85", 0,0,0,0,0, 
+                              2007, "HY",0,0,0,0,0,
+                              2008, "E85", 0,0,0,0,0, 
+                              2008, "HY",0,0,0,0,0,
+                              2009, "E85", 0,0,0,0,0, 
+                              2009, "HY",0,0,0,0,0,
+                              2010, "HY",0,0,0,0,0), ncol = 7, byrow = T)
 
 
 
 
 makeupdata <- data.frame(makeupdata)
-colnames(makeupdata) <- c("Year","Type","Vehicle","Fuel","Prop","Speed")
+colnames(makeupdata) <- c("Year","Type","Vehicle","Fuel","Prop","Speed","add_fuel")
 
 vehicle_df_final2 <- rbind(vehicle_df_final2, makeupdata)
 vehicle_df_final2 <- vehicle_df_final2[order(vehicle_df_final2$Type),]
@@ -326,26 +327,36 @@ vehicle_df_final2$Fuel <- as.numeric(vehicle_df_final2$Fuel)
 vehicle_df_final2$Speed <- as.numeric(vehicle_df_final2$Speed)
 vehicle_df_final2$Prop <- as.numeric(vehicle_df_final2$Prop)
 vehicle_df_final2$Type <- factor(vehicle_df_final2$Type)
+vehicle_df_final2$add_fuel <- as.numeric(vehicle_df_final2$add_fuel)
+
+
+
+### 21 rep.int(year_total, num_year)
+  initial_vehicles2 <- rep(c(41711,254077,2227,33,1166,26978),  11)
+  vehicle_df_final2$Vehicle_scale <- vehicle_df_final2$Vehicle / initial_vehicles2
+ 
+###
 
 p34 <- vehicle_df_final2 %>%
-  plot_ly(x = ~Fuel, y = ~Speed, color = ~Type, 
-               size = ~Prop^(1/3) * 60, colors = kaicolorset2, 
+  plot_ly(x = ~Fuel, y = ~Vehicle_scale, color = ~Type, 
+               size = ~Prop^(1/2) * 50, colors = kaicolorset2, 
                type = 'scatter', mode = 'markers', frame = ~Year, 
                opacity = 0.3,
                sizes = 60*(c(min(vehicle_df_final2$Prop), max(vehicle_df_final2$Prop)))^(1/3),
                marker = list(symbol = 'circle', sizemode = 'diameter',
                              line = list(width = 0.5, color = '#FFFFFF')),
                text = ~paste(Type, ':<br>', Prop*100, '%')) %>%
-  layout(title = 'Fuel Stations vs Increasing Speed of Vehicles',
-         xaxis = list(title = 'Rate of increasing vehicles',
+  layout(title = 'Vehicles',
+         xaxis = list(title = 'Fuel Stations Accumulation',
                       gridcolor = 'rgb(255, 255, 255)',
                       range = c(0, 5300),
                       zerolinewidth = 1,
                       ticklen = 5,
                       gridwidth = 2),
-         yaxis = list(title = '# of Fuel Stations',
+         yaxis = list(title = 'Vehicles',
                       gridcolor = 'rgb(255, 255, 255)',
                       zerolinewidth = 1,
+                      range = c(0, 4),
                       ticklen = 5,
                       gridwith = 2),
          paper_bgcolor = 'rgb(243, 243, 243)',
@@ -356,10 +367,13 @@ p34 <- vehicle_df_final2 %>%
     x = 1, xanchor = "right", y = 0, yanchor = "top"
   ) %>%
   animation_slider(
-    currentvalue = list(prefix = "Year ", font = list(color="red"))
+    currentvalue = list(prefix = "Year ", font = list(color="Orange"))
   )
 
  
+p34
+
+
 rownames(vehicle_df_final2) <- 1:nrow(vehicle_df_final2)
 fuel_vehicle_add3 <- fuel_vehicle_add[-c(1,2,3,4,27,33)]
 regular <- which(vehicle_df_final2$Speed ==0)
@@ -394,6 +408,8 @@ p35 <- reg_df %>%
   ) 
   
 
+
+
 # p35
 # Years_available <- unique(vehicle_df_final3$Year[selected_rows])
 # REG_FUEL_ADD <- as.numeric(table_fuel_year[as.character(Years_available),input$fuel_type_reg])
@@ -403,3 +419,24 @@ p35 <- reg_df %>%
 # p <- plot_ly(data = iris, x = ~Sepal.Length, y = ~Petal.Length, color = ~Species)
 # p
 # 
+
+
+
+p36 <- 
+  vehicle_df_final2 %>%
+  plot_ly(x =~ Fuel, y =~ Vehicle_scale, color =~ Type, visible = "legendonly",
+          type = "scatter", size = 10, sizes = c(11,15), text =~ Year)%>%
+  layout(
+    xaxis = list(title = 'Number of Stations',
+               #  gridcolor = 'grey',
+                 zerolinewidth = 1,
+                 ticklen = 5,
+                 gridwidth = 1),
+    yaxis = list(title = 'Vehicles',
+               #  gridcolor = 'grey',
+                 zerolinewidth = 1,
+                 ticklen = 5,
+                 gridwidth = 1)
+  ) 
+
+
