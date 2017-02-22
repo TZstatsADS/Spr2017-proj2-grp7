@@ -40,7 +40,7 @@ start<-"Columbia University"
 end<-"Time Square"
 ##start,end are location names
 myroute<-Findpath(start,end,Nodes,Segments,stations)
-myroute.df<-data.frame(myroute)
+myroute.df<-myroute[[1]]
 
 start.coord<-as.numeric(geocode(start)[2:1])
 end.coord<-as.numeric(geocode(end)[2:1])
@@ -55,7 +55,7 @@ shinyServer(function(input, output) {
       addTiles( urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
                 attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>% 
       addMarkers(data=point) %>%
-      addPolylines(lng=myroute.df$go.Longtitude,lat=myroute.df$go.Latitude)
+      addPolylines(lng=myroute.df$Longtitude,lat=myroute.df$Latitude)
   })
   
   
