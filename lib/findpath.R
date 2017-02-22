@@ -208,3 +208,13 @@ Findpath<-function(start,end,Nodes=Nodes,Segments=Segments,stations=stations){
   return(list(go=Route.Go,back=Route.Back))
 }
 
+Nearest.station<-function(add){
+  addr<-as.numeric(geocode(add)[2:1])
+  fileUrl<-"https://developer.nrel.gov/api/alt-fuel-stations/v1/nearest.csv?api_key=Qf1NPRTeyq65qExWvjIVoGmqxyNu6QxYEHgFrZM4&"
+  fileUrl<-paste0(fileUrl,"latitude=",addr[2],"&longitude=",addr[1])
+  download.file(fileUrl,'../data/nearbystation.csv','curl')
+  df<-read.csv("../data/nearbystation.csv",header=TRUE)
+  return(list(lat=as.numeric(df$Latitude),lng=as.numeric(df$Longitude)))
+}
+
+
