@@ -12,6 +12,7 @@ library(ggmap)
 library(ggplot2)
 library(shinydashboard)
 library(plotly)
+library(shinyBS)
 
 header <- dashboardHeader(
   title = "How New York fill while driving",
@@ -69,25 +70,31 @@ body<-dashboardBody(
                          title = "Fuels", solidHeader = T,
                          radioButtons("fuel_type1", "Choose a type of fuel to analyze", 
                                       choices = c("ALL","HY","BD","LPG","LNG","ELEC","E85","CNG"), 
-                                      selected = "ALL", inline = TRUE, width = '75%')
-                         
-                         
-                         
+                                      selected = "ALL", inline = TRUE, width = '75%'),
+                         bsTooltip("fuel_type1", "HY: hydrogen<br>BD: biodiesel<br>LPG: liquefied petroleum gas<br>LNG: liquefied natural gas<br> ELEC: electricity<br>E85: 85% ethanol,15% gasoline <br>CNG: compressed natural gas",
+                                   "bottom")
+ 
                 ),
                 
                 tabPanel("Scale", 
                          radioButtons("index_scale", "Choose a way of scaling", 
                                       choices = c("None","By Areas","By number of vehicles"), 
-                                      selected = "None", width = '75%')
+                                      selected = "None", width = '75%'),
+                         bsTooltip("index_scale", "*By Areas: <br>The number of stations will be devided by the areas of states",
+                                   "bottom")
                        
                 ),
                 tabPanel("Colobar", 
                           radioButtons("index_aim", "Let colorbar:", 
                                       choices = c("be fixed",
                                                   "change with the year"
-                                      ), 
-                                      selected = "be fixed", width = '75%')
+                                      ), selected = "be fixed", width = '75%'),
+                         bsTooltip("index_aim", "*change with the year: <br>the range of colorbar will change with the year",
+                                   "bottom")
                          
+                         
+                         # bsTooltip("index_aim", "change with the year: colorbar's range will narrow down to the displayed",
+                         #           "bottom")
                 )
               ),
               
@@ -103,7 +110,12 @@ body<-dashboardBody(
                                      dragRange = T, 
                                      animate = animationOptions(interval = c(300,800), 
                                                                 loop = F,
-                                                                playButton = "Click here to play!")))
+                                                                playButton = "PLAY!")),
+                         
+                         bsTooltip("animationslider", "Click the \"PLAY\" button to see the trend from 1971",
+                                   "bottom")
+                         
+                         )
               ),
               
               
