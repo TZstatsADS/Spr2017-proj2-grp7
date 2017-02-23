@@ -37,9 +37,9 @@ source("../lib/Kai_code.R")
 #-------------------------------------------------------------------------------------------------------------
 ##start and end will be input from ui, here we just give an example by giving them value directly
 start<-"Columbia University"
-end<-"Time Square"
+end<-"Time square"
 ##start,end are location names
-myroute<-Findpath(start,end,Nodes,Segments,stations)
+myroute<-Findpath(start,end,Nodes,Segments,stations,"CNG","All","All")
 myroute.df<-myroute[[1]]
 
 start.coord<-as.numeric(geocode(start)[2:1])

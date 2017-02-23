@@ -1,4 +1,4 @@
-﻿# Project 2: Open Data App - an RShiny app development project
+# Project 2: Open Data App - an RShiny app development project
 
 ![screenshot](doc/screenshot2.png)
 
