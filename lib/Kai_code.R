@@ -193,7 +193,7 @@ p34 <- vehicle_df_final2 %>%
          # paper_bgcolor = 'rgb(243, 243, 243)',
           plot_bgcolor = 'rgb(243, 243, 243)'
   )%>%
-  animation_opts(1000, easing = "elastic") %>%
+  animation_opts(600, easing = "elastic") %>%
   animation_button(
     x = 0, xanchor = "right", y = 0.1, yanchor = "top"
   ) %>%
