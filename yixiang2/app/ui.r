@@ -19,10 +19,11 @@ sidebar<-dashboardSidebar(
   width = 320,
   sidebarMenu(
  
-    menuItem("StatAnalysis", tabName = "statanalysis", icon = icon("signal")),
+    menuItem("StatAnalysis", tabName = "statanalysis", icon = icon("bar-chart-o")),
     menuItem("patternanalysis", tabName = "patternanalysis", icon = icon("signal")),
-    menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker"))
-  )
+    menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker")),
+    menuItem("Appendix", tabName = "appendix",icon=icon("list-alt"))
+    )
 )
 
 body<-dashboardBody(
@@ -106,6 +107,7 @@ body<-dashboardBody(
                             selected ="All")
             ))))),
   
+    
     tabItem(tabName = "statanalysis",
             
             titlePanel("Analysis of fuel types and costs"),
@@ -183,6 +185,11 @@ body<-dashboardBody(
                        
 ), 
 
+tabItem(tabName = "appendix,",
+        h2("Appendix"),
+        tableOutput("fuel")
+  
+),
 
 tabItem(tabName = "patternanalysis",
         ### KAI CHEN is responsible for the tab "StateAnalysis"

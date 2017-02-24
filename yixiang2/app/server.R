@@ -88,6 +88,7 @@ shinyServer(function(input, output,session) {
   FFF<-eventReactive(input$nearby,{input$userlocation})
   
   
+  ##################Yue's code############################
   output$model1=renderUI({
     c1=input$make1
     m1=as.vector(unique(vehdata$model[vehdata$manufacturer==c1]))
@@ -229,13 +230,14 @@ shinyServer(function(input, output,session) {
                     "Fuel Cost1","Fuel Cost2",
                     "Year"),m)
     }
-    
-    
     m
-    
   })
   
+  output$fuel=renderTable({
+    fuels
+  }, sanitize.text.function = function(x) x)
   
+ #########################Yue's code############################# 
   
   output$mymap <- renderLeaflet({
     leaflet() %>%
@@ -293,6 +295,7 @@ shinyServer(function(input, output,session) {
   
   })
   
+  
   observe({
     
     start.coord<-as.numeric(geocode( AAA() )[2:1])
@@ -340,6 +343,22 @@ shinyServer(function(input, output,session) {
       })
     }
     
+  })
+  
+  observe({
+    
+    mylocationcoord<-as.numeric(geocode(FFF())[2:1])
+    mylocation<-data.frame(long=mylocationcoord[1],lat=mylocationcoord[2])
+    nearbystations<-Nearest.station(FFF())
+    output$mymap<-renderLeaflet({
+      leafletProxy("mymap") %>%
+        clearShapes() %>%
+        clearMarkers() %>%
+        addTiles(urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+                 attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
+        addMarkers(data=mylocation,icon=start.icon) %>%
+        addMarkers(data=nearbystations,lat = ~lat,lng = ~lng,icon=station.icon)
+    })
   })
   
   int_data <- reactive({
