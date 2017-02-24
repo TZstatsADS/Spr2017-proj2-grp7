@@ -11,7 +11,7 @@ library(shinyBS)
 
 
 header <- dashboardHeader(
-  title = "How New York fill while driving",
+  title = "How to fill while driving",
   titleWidth = 320
 )
 
@@ -19,8 +19,8 @@ sidebar<-dashboardSidebar(
   width = 320,
   sidebarMenu(
  
-    menuItem("StatAnalysis", tabName = "statanalysis", icon = icon("bar-chart-o")),
-    menuItem("patternanalysis", tabName = "patternanalysis", icon = icon("signal")),
+    menuItem("Fuels Analysis", tabName = "statanalysis", icon = icon("bar-chart-o")),
+    menuItem("Pattern Analysis", tabName = "patternanalysis", icon = icon("signal")),
     menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker")),
     menuItem("Appendix", tabName = "appendix",icon=icon("list-alt"))
     )
