@@ -41,6 +41,9 @@ library(reshape2)
 library(UScensus2010)
 library(choroplethr)
 
+#!!!!!!!!If your plotly version is not 4.5.6.9, 
+#then please run the code in the comments to make sure there's no bug:
+
 #if(!require("devtools")) install.packages("devtools")
 #devtools::install_github("ropensci/plotly",force=TRUE)
 
@@ -237,6 +240,11 @@ shinyServer(function(input, output,session) {
   output$fuel=renderTable({
     fuels
   }, sanitize.text.function = function(x) x)
+  
+  
+  output$team=renderTable({
+    team
+  })
   
  #########################Yue's code############################# 
   

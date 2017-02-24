@@ -24,16 +24,20 @@ Term: Spring 2017
 	Data Cleaning;
 	ShinyApp Design and Debug.
 		
-	+ Kai Chen
-    + Yue Gao:
-    Vehicle data analysis (fuel type analysis, alternative fuel vehicle comparison);
-    Appendix structuring.
+	+ Kai Chen:
+	
+  + Yue Gao:
+  Vehicle data analysis (fuel type analysis, alternative fuel vehicle comparison);
+  Appendix structuring.
+	
 	+ Yi Xiang:
 	States Route Code Design;
 	ShinyApp Initialization, Find-Route Structuring;
 	Repo Structuring.
 
-	+ Yuxi Zhou
+	+ Yuxi Zhou:
+	Clean the data of the relationship between vehicles and stations;
+	Help with the establishment of the shiny APP on ui and some functions 
 
 This folder is orgarnized as follows.
 

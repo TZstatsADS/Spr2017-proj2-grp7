@@ -33,7 +33,7 @@ sidebar<-dashboardSidebar(
   width = 300,
   sidebarMenu(
  
-    menuItem("Fuels Analysis", tabName = "statanalysis", icon = icon("bar-chart-o")),
+    menuItem("Fuel Analysis", tabName = "statanalysis", icon = icon("bar-chart-o")),
     menuItem("Pattern Analysis", tabName = "patternanalysis", icon = icon("signal")),
     menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker")),
     menuItem("Appendix", tabName = "appendix",icon=icon("list-alt"))
@@ -124,7 +124,7 @@ body<-dashboardBody(
     
     tabItem(tabName = "statanalysis",
             
-            titlePanel("Analysis of fuel types and costs"),
+            titlePanel("Fuel Analysis"),
             br(),
             fluidRow(
               
@@ -143,14 +143,14 @@ body<-dashboardBody(
                        h4("Vehicle 1:"),
                        
                        selectizeInput("make1", label = "Select the manufacturtor:",
-                                      choices = makelist,selected="Audi"),
+                                      choices = makelist,selected="Honda"),
                        
                        uiOutput("model1"),
                        
                        h4("Vehicle 2:"),
                        
                        selectizeInput("make2", label = "Select the manufacturtor:",
-                                      choices = makelist,selected = "Volvo"),
+                                      choices = makelist,selected = "BMW"),
                        
                        uiOutput("model2")
                        
@@ -199,9 +199,11 @@ body<-dashboardBody(
                        
 ), 
 
-tabItem(tabName = "appendix,",
+tabItem(tabName = "appendix",
         h2("Appendix"),
-        tableOutput("fuel")
+        tableOutput("fuel"),
+        h2("About Us"),
+        tableOutput("team")
   
 ),
 
