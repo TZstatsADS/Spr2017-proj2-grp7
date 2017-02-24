@@ -41,7 +41,13 @@ source("../lib/longroute.R")
 
 station.icon<- icons(
   iconUrl =("../lib/stationpic.png"),
-  iconWidth = 10, iconHeight = 10,
+  iconWidth = 35, iconHeight = 35,
+  iconAnchorX = 10, iconAnchorY = 10
+)
+
+station.icon2<- icons(
+  iconUrl =("../lib/stationpic.png"),
+  iconWidth = 15, iconHeight = 15,
   iconAnchorX = 10, iconAnchorY = 10
 )
 
@@ -94,6 +100,7 @@ shinyServer(function(input, output) {
       ##start,end are location names
       myroute<-Findpath(aaa(),bbb(),Nodes,Segments,stations,ccc(),ddd(),eee())
       myroute.df<-myroute[[1]]
+      stationpoint<-data.frame(long=Nodes$Longtitude[Nodes$ID==myroute[[3]]],lat=Nodes$Latitude[Nodes$ID==myroute[[3]]])
 
         leafletProxy("mymap") %>%
           clearTiles() %>%
@@ -102,6 +109,7 @@ shinyServer(function(input, output) {
           addTiles( urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
                     attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
           addMarkers(data=startpoint,icon=start.icon) %>%
+          addMarkers(data=stationpoint,icon=station.icon) %>%
           addMarkers(data=endpoint,icon=end.icon) %>%
           addPolylines(lng=myroute.df$Longtitude,lat=myroute.df$Latitude) %>%
           fitBounds(lng1=max(myroute.df$Longtitude),lat1=max(myroute.df$Latitude),
@@ -118,11 +126,60 @@ shinyServer(function(input, output) {
                    attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
           addMarkers(data=startpoint,icon=start.icon) %>%
           addMarkers(data=endpoint,icon=end.icon) %>%
-          addMarkers(data = mylongroute$stations, lat =  ~Latitude, lng = ~Longitude,icon =station.icon) %>%
+          addMarkers(data = mylongroute$stations, lat =  ~Latitude, lng = ~Longitude,icon =station.icon2) %>%
           addPolylines(data = mylongroute$routnode,lat = ~lat, lng = ~lon)
       })
     }
   
+  })
+  
+  observe({
+    
+    start.coord<-as.numeric(geocode( AAA() )[2:1])
+    end.coord<-as.numeric(geocode( BBB() )[2:1])
+    startpoint<-data.frame(long=start.coord[1],lat=start.coord[2])
+    endpoint<-data.frame(long=end.coord[1],lat=end.coord[2])
+    startGeo<-geocode(AAA())
+    endGeo<-geocode(BBB())
+    
+    start.city<-as.character(strsplit(revgeocode(start.coord),", ")[[1]][2])
+    end.city<-as.character(strsplit(revgeocode(end.coord),", ")[[1]][2])
+    
+    if (start.city=="New York" && end.city=="New York"){
+      ##start,end are location names
+      myroute<-Findpath(aaa(),bbb(),Nodes,Segments,stations,CCC(),DDD(),EEE())
+      myroute.df<-myroute[[2]]
+      stationpoint<-data.frame(long=Nodes$Longtitude[Nodes$ID==myroute[[4]]],lat=Nodes$Latitude[Nodes$ID==myroute[[4]]])
+      
+      leafletProxy("mymap") %>%
+        clearTiles() %>%
+        clearShapes() %>%
+        clearMarkers() %>%
+        addTiles( urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+                  attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
+        addMarkers(data=startpoint,icon=start.icon) %>%
+        addMarkers(data=stationpoint,icon=station.icon) %>%
+        addMarkers(data=endpoint,icon=end.icon) %>%
+        addPolylines(lng=myroute.df$Longtitude,lat=myroute.df$Latitude) %>%
+        fitBounds(lng1=max(myroute.df$Longtitude),lat1=max(myroute.df$Latitude),
+                  lng2 = min(myroute.df$Longtitude),lat2 = min(myroute.df$Latitude))
+      
+    }else if (start.city!="New York" || end.city!="New York"){
+      #if at least one location is not in new york
+      mylongroute<-get_myrouteandstations(start = aaa(),end = bbb())
+      output$mymap <- renderLeaflet({
+        leafletProxy("mymap") %>%
+          clearShapes() %>%
+          clearMarkers() %>%
+          addTiles(urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+                   attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
+          addMarkers(data=startpoint,icon=start.icon) %>%
+          addMarkers(data=endpoint,icon=end.icon) %>%
+          addMarkers(data = mylongroute$stations, lat =  ~Latitude, lng = ~Longitude,icon =station.icon2) %>%
+          addPolylines(data = mylongroute$routnode,lat = ~lat, lng = ~lon)
+      })
+    }
+    
   })
 
 })
