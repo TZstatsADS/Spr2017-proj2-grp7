@@ -7,6 +7,23 @@
 #    http://shiny.rstudio.com/
 #
 #
+# 
+
+#install uninstalled packages
+packages.used=c("shiny", "leaflet", "ggmap",
+                "ggplot2", "RCurl","RJSONIO","igraph","geosphere"
+                ,"data.table")
+
+
+# check packages that need to be installed.
+packages.needed=setdiff(packages.used,
+                        intersect(installed.packages()[,1],
+                                  packages.used))
+# install additional packages
+if(length(packages.needed)>0){
+  install.packages(packages.needed, dependencies = TRUE,
+                   repos='http://cran.us.r-project.org')
+}
 
 library(shiny)
 library(leaflet)
@@ -16,41 +33,124 @@ library(RCurl)
 library(RJSONIO)
 library(igraph)
 library(geosphere)
+library(googleway)
 library(data.table)
 
 source("../lib/findpath.R")
+source("../lib/longroute.R")
+
+station.icon<- icons(
+  iconUrl =("../lib/stationpic.png"),
+  iconWidth = 10, iconHeight = 10,
+  iconAnchorX = 10, iconAnchorY = 10
+)
+
+# start.icon<-icons("https://thumbs.dreamstime.com/z/cute-vector-orange-toy-car-icon-isolated-sticker-50095461.jpg")
+# end.icon<-icons("https://s-media-cache-ak0.pinimg.com/564x/d9/7f/ea/d97feac57bebf6007994f6a6286d005b.jpg")
 
 
-#-------------------------------------------------------------------------------------------------------------
-##start and end will be input from ui, here we just give an example by giving them value directly
-start<-"Columbia University"
-end<-"Time Square"
-##start,end are location names
-myroute<-Findpath(start,end,Nodes,Segments,stations)
-myroute.df<-data.frame(myroute)
+start.icon<-icons(iconUrl = "../lib/startpic.png",
+                     iconWidth = 35,iconHeight = 35,
+                     iconAnchorX = 22, iconAnchorY = 25)
+end.icon<-makeIcon(iconUrl = "../lib/endpic.png",
+                     iconWidth = 35,iconHeight = 35)
 
-start.coord<-as.numeric(geocode(start)[2:1])
-end.coord<-as.numeric(geocode(end)[2:1])
+shinyServer(function(input, output) { 
+      
+  aaa<-eventReactive(input$calpath,{input$start})
+  bbb<-eventReactive(input$calpath,{input$end})
+  ccc<-eventReactive(input$calpath,{input$fueltype})
+  ddd<-eventReactive(input$calpath,{input$elecnetwork})
+  eee<-eventReactive(input$calpath,{input$elecconnecter})
+  
+  AAA<-eventReactive(input$altpath,{input$start})
+  BBB<-eventReactive(input$altpath,{input$end})
+  CCC<-eventReactive(input$altpath,{input$fueltype})
+  DDD<-eventReactive(input$altpath,{input$elecnetwork})
+  EEE<-eventReactive(input$altpath,{input$elecconnecter})
+  FFF<-eventReactive(input$nearby,{input$userlocation})
+  
 
-point<-data.frame(long=c(start.coord[1],end.coord[1]),lat=c(start.coord[2],end.coord[2]))
-
-shinyServer(function(input, output) {
-#-----------------------------------------------------------------------------------------------------------  
   output$mymap <- renderLeaflet({
-      leaflet() %>%
-     # setView(lng=-95.7, lat=37.1, zoom=4 )%>%
+    leaflet() %>%
+      setView(lng=-95.7, lat=37.1, zoom=4 )%>%
       addTiles( urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
-                attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>% 
-      addMarkers(data=point) %>%
-      addPolylines(lng=myroute.df$go.Longtitude,lat=myroute.df$go.Latitude)
+                attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')
   })
-})
   
-##we can use leafletproxy to modify existing maps.
-  # observe({
-  #   leafletProxy("mymap") %>% addMarkers(lng=as.numeric(input$points_starts[[1]]),lat=as.numeric(input$points_starts[[2]]))
-  #   leafletProxy("mymap") %>% addMarkers(lng=as.numeric(input$points_end[[1]]),lat=as.numeric(input$points_end[[2]]))
-  # })
-  
+  observe({
 
+    start.coord<-as.numeric(geocode( aaa() )[2:1])
+    end.coord<-as.numeric(geocode( bbb() )[2:1])
+    startpoint<-data.frame(long=start.coord[1],lat=start.coord[2])
+    endpoint<-data.frame(long=end.coord[1],lat=end.coord[2])
+    startGeo<-geocode(aaa())
+    endGeo<-geocode(bbb())
+    
+    
+    start.coord2<-as.numeric(geocode( AAA() )[2:1])
+    end.coord2<-as.numeric(geocode( BBB() )[2:1])
+    startpoint2<-data.frame(long=start.coord2[1],lat=start.coord2[2])
+    endpoint2<-data.frame(long=end.coord2[1],lat=end.coord2[2])
+    startGeo2<-geocode(AAA())
+    endGeo2<-geocode(BBB())
+
+    start.city<-as.character(strsplit(revgeocode(start.coord),", ")[[1]][2])
+    end.city<-as.character(strsplit(revgeocode(end.coord),", ")[[1]][2])
+
+    if (start.city=="New York" && end.city=="New York"){
+      ##start,end are location names
+      myroute<-Findpath(aaa(),bbb(),Nodes,Segments,stations,ccc(),ddd(),eee())
+      myroute.df<-myroute[[1]]
+      
+      alternativeroute<-Findpath(AAA(),BBB(),Nodes,Segments,stations,CCC(),DDD(),EEE())
+      alternative.df<-alternativeroute[[2]]
+       if(input$calpath){ 
+        leafletProxy("mymap") %>%
+          clearTiles() %>%
+          clearShapes() %>%
+          clearMarkers() %>%
+          addTiles( urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+                    attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
+          addMarkers(data=startpoint,icon=start.icon) %>%
+          addMarkers(data=endpoint,icon=end.icon) %>%
+          addPolylines(lng=myroute.df$Longtitude,lat=myroute.df$Latitude) %>%
+          fitBounds(lng1=max(myroute.df$Longtitude),lat1=max(myroute.df$Latitude),
+                    lng2 = min(myroute.df$Longtitude),lat2 = min(myroute.df$Latitude))
+       }
+      else if (input$altpath){
+        observe(
+        leafletProxy("mymap") %>%
+          clearTiles() %>%
+          clearShapes() %>%
+          clearMarkers() %>%
+          addTiles( urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+                    attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
+          addMarkers(data=startpoint2,icon=start.icon) %>%
+          addMarkers(data=endpoint2,icon=end.icon) %>%
+          addPolylines(lng=alternative.df$Longtitude,lat=alternative.df$Latitude) %>%
+          fitBounds(lng1=max(alternative.df$Longtitude),lat1=max(alternative.df$Latitude),
+                    lng2 = min(alternative.df$Longtitude),lat2 = min(alternative.df$Latitude))
+        )
+        }
+      
+    }else if (start.city!="New York" || end.city!="New York"){
+      #if at least one location is not in new york
+      mylongroute<-get_myrouteandstations(start = aaa(),end = bbb())
+      output$mymap <- renderLeaflet({
+        leafletProxy("mymap") %>%
+          clearShapes() %>%
+          clearMarkers() %>%
+          addTiles(urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+                   attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>')  %>%
+          addMarkers(data=startpoint,icon=start.icon) %>%
+          addMarkers(data=endpoint,icon=end.icon) %>%
+          addMarkers(data = mylongroute$stations, lat =  ~Latitude, lng = ~Longitude,icon =station.icon) %>%
+          addPolylines(data = mylongroute$routnode,lat = ~lat, lng = ~lon)
+      })
+    }
+  
+  })
+
+})
 
