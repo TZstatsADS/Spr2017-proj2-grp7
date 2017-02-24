@@ -88,6 +88,7 @@ shinyServer(function(input, output,session) {
   FFF<-eventReactive(input$nearby,{input$userlocation})
   
   
+  ##################Yue's code############################
   output$model1=renderUI({
     c1=input$make1
     m1=as.vector(unique(vehdata$model[vehdata$manufacturer==c1]))
@@ -229,13 +230,14 @@ shinyServer(function(input, output,session) {
                     "Fuel Cost1","Fuel Cost2",
                     "Year"),m)
     }
-    
-    
     m
-    
   })
   
+  output$fuel=renderTable({
+    fuels
+  }, sanitize.text.function = function(x) x)
   
+ #########################Yue's code############################# 
   
   output$mymap <- renderLeaflet({
     leaflet() %>%
