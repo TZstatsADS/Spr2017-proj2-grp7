@@ -52,5 +52,9 @@ fuels=data.frame(FuelName=c("CNG (Compressed Natural Gas)",
 ","      Most gas stations offer three octane levels: regular (about 87), mid-grade (about 89) and premium (91 to 93). Generally, gasoline octane ratings are a measure of how well the fuel mixture can resist pre-ignition or knocking. That is to say, higher rating gasoline (like Premium Gas) can keep engines cleaner due to its detergent additives and produce less pollution.
 "    ))
 
-
+team=data.frame(
+  MemberName=c("Yaqin Li","Kai Chen","Yue Gao","Yi Xiang","Yuxi Zhou"),
+  email=c(""),contribution=c("")
+  
+)
 
