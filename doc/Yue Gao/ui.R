@@ -70,6 +70,11 @@ fluidPage(
   wellPanel(tableOutput("table"),
             helpText("For single fuel vehicles, there will be only one fuel. 
                      For dual fuel vehicles, this will be a conventional fuel (fueltype1) and an alternative fuel (fueltype2)."))
+  ),
+
+  wellPanel(tableOutput("fuel")
+    
+    
   )
 
 )

@@ -154,5 +154,9 @@ shinyServer(
     
   })
   
+  output$fuel=renderTable({
+  fuels
+  }, sanitize.text.function = function(x) x)
+  
 
 })
