@@ -12,7 +12,8 @@
 #install uninstalled packages
 packages.used=c("shiny", "leaflet", "ggmap",
                 "ggplot2", "RCurl","RJSONIO","igraph","geosphere"
-                ,"data.table")
+                ,"data.table","googleway","dplyr","reshape2",
+                "UScensus2010","choroplethr")
 
 
 # check packages that need to be installed.
