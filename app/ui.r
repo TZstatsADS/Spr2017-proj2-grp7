@@ -25,12 +25,12 @@ library(shinyBS)
 
 
 header <- dashboardHeader(
-  title = "How to fill while driving",
+  title = "The Alternative Fuels",
   titleWidth = 320
 )
 
 sidebar<-dashboardSidebar(
-  width = 320,
+  width = 300,
   sidebarMenu(
  
     menuItem("Fuels Analysis", tabName = "statanalysis", icon = icon("bar-chart-o")),

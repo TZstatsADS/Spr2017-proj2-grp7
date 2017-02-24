@@ -1,6 +1,6 @@
 # Project 2: Open Data App - an RShiny app development project
 
-![screenshot](doc/screenshot2.png)
+![screenshot](doc/screenshot3.png)
 
 ## Project Title: Alternative Fuels in US
 Term: Spring 2017
