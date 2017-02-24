@@ -25,7 +25,9 @@ Term: Spring 2017
 	ShinyApp Design and Debug.
 		
 	+ Kai Chen
-	+ Yue Gao
+    + Yue Gao:
+    Vehicle data analysis (fuel type analysis, alternative fuel vehicle comparison);
+    Appendix structuring.
 	+ Yi Xiang:
 	States Route Code Design;
 	ShinyApp Initialization, Find-Route Structuring;
