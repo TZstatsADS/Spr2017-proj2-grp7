@@ -72,9 +72,8 @@ fluidPage(
                      For dual fuel vehicles, this will be a conventional fuel (fueltype1) and an alternative fuel (fueltype2)."))
   ),
 
-  wellPanel(tableOutput("fuel"),
-            
-  wellPanel(tableOutput("team"))  
+  wellPanel(tableOutput("fuel")
+    
     
   )
 

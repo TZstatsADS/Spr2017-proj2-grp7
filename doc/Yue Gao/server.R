@@ -158,8 +158,5 @@ shinyServer(
   fuels
   }, sanitize.text.function = function(x) x)
   
-  output$team=renderTable({
-    team
-  })
 
 })
