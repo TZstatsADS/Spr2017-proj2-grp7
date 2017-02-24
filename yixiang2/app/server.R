@@ -371,7 +371,7 @@ shinyServer(function(input, output,session) {
     df_fuel_state_int <- data.frame(table_fuel_state_int)
     df_fuel_state_int$SUM <- rowSums(df_fuel_state_int)
     df_fuel_state_int$state <- rownames(df_fuel_state_int)
-    df_fuel_state_int$state2 <- states_full
+    df_fuel_state_int$state2 <- states_total
     
     df_color <- data.frame(apply(table_grow_afs, c(3,1), sum))
     if (input$index_scale == "By Areas(km^2)"|input$index_scale == "By Areas(mi^2)"){

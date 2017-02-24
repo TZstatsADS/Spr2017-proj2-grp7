@@ -1,10 +1,24 @@
+################################################################################
+# This r code is contributed by Kai Chen. If any problem is detected           #
+# during running, please feel free to contact him(email: kc3041@columbia.edu)  #
+################################################################################
 
+
+### Load library
+library(dplyr)
+library(tibble)
+
+
+
+### Load fuel station data
 path_alt_fuel_station <- "../data/alt_fuel_stations (Feb 12 2017).csv"
 alt_fuel_station <- read.csv(path_alt_fuel_station, 
                              stringsAsFactors = F,
                              header = T)
-nrow(alt_fuel_station)
+#nrow(alt_fuel_station)
 
+
+### Pick our interested columns and create a new data frame
 grow_afs <- 
   tbl_df(alt_fuel_station)  %>%
   select(Fuel.Type.Code, Expected.Date, Open.Date, State) %>%
@@ -16,92 +30,84 @@ grow_afs <-
   mutate(Start.Month = format(Start.Date, '%m')) %>%
   select(Fuel.Type.Code, Start.Year, State)
 
+### Create a table to bring convenience for the later computations.
 table_grow_afs <- table(grow_afs)
-## generate a table, with (x=year, y=fuel)
+
+### generate a new table, with (x=year, y=fuel)
 table_fuel_year <- apply(table_grow_afs, c(2,1), sum)
+
+### Whole states/years
 years_total <- as.numeric(rownames(table_fuel_year))
-states_full <- dimnames(table_grow_afs)$State
 states_total <- dimnames(table_grow_afs)$State
-#table_fuel_state <- apply(table_grow_afs, c(3,1), sum) 
 
 
-### A dataset which can help to transform our states' names
+### Preparation for the later transformation of our states' names
 df_name_state <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_us_ag_exports.csv",
                           stringsAsFactors = F)
 ABBR = df_name_state$code
 FULL = df_name_state$state
-
-
 for (i in 1:50){
-  states_full <- replace(states_full,  states_full== ABBR[i], FULL[i])
+  states_total <- replace(states_total,  states_total== ABBR[i], FULL[i])
 }
 
 
-
-
-# sort(FULL)
-# grow_afs <- grow_afs[grow_afs$State!="DC",]
-# 
-# 
-# grow_state_condition <- data.frame(state = sort(unique(grow_afs$State)), 
-#                                    stringsAsFactors = F)
-# grow_state_condition$state2 <- grow_state_condition$state
-
-
-# specify some map projection/options
+### Geo information of USA
 g <- list(
   scope = 'usa',
   projection = list(type = 'albers usa')
 )
 
+### I wanted to do research based on the demography, but I couldnt' find a 
+### good dataset so I gave it up.
 
-data(df_pop_state)
-df_pop_state$region[9] <- "DC"
-df_pop_state <- df_pop_state[order(df_pop_state$region),]
-rownames(df_pop_state) <- 1:51
+# data(df_pop_state)
+# df_pop_state$region[9] <- "DC"
+# df_pop_state <- df_pop_state[order(df_pop_state$region),]
+# rownames(df_pop_state) <- 1:51
 
-###
+### Colorset
 kaicolorset <- c("Reds","YlOrBr","YlGn","PuBu", "PuRd", "Purples", "Oranges")
-#kaicolorset_trend <- c("Red","Yellow","Green","Blue","","")
-# 
- folder_path_kai <- "../data/vehicle_station/"
- temp <- list.files(path = folder_path_kai, pattern = "*.csv")
- temp <- paste(folder_path_kai, temp, sep = "")
- vehicle_list <- lapply(temp, read.csv, header = T, stringsAsFactors = F)
- vehicle_length <- sapply(vehicle_list, nrow)
- vehicle_total <-
+
+### Load vehicle data and process data
+folder_path_kai <- "../data/vehicle_station/"
+temp <- list.files(path = folder_path_kai, pattern = "*.csv")
+temp <- paste(folder_path_kai, temp, sep = "")
+vehicle_list <- lapply(temp, read.csv, header = T, stringsAsFactors = F)
+vehicle_length <- sapply(vehicle_list, nrow)
+vehicle_total <-
    rbind(vehicle_list[[1]],vehicle_list[[2]],
          vehicle_list[[3]],vehicle_list[[4]],
          vehicle_list[[5]],vehicle_list[[6]])
- vehicle_df <- ddply(vehicle_total, .(Year, Fuel.Type), function(df){
+vehicle_df <- ddply(vehicle_total, .(Year, Fuel.Type), function(df){
    return(sum(df$Number.of.Vehicles))
- })
-vehicle_df
- name_fuel_vehicle <- substr(vehicle_df$Fuel, 
+})
+name_fuel_vehicle <- substr(vehicle_df$Fuel, 
                              nchar(vehicle_df$Fuel)-3, 
                              nchar(vehicle_df$Fuel)-1)
- 
- name_fuel_vehicle <- replace(name_fuel_vehicle, name_fuel_vehicle=="EVC", "ELEC")
- name_fuel_vehicle <- replace(name_fuel_vehicle, name_fuel_vehicle=="HYD", "HY")
- year_vehicle <- as.character(vehicle_df$Year)
- fuel_vehicle <- mapply(function(Year, type){
+name_fuel_vehicle <- replace(name_fuel_vehicle, name_fuel_vehicle=="EVC", "ELEC")
+name_fuel_vehicle <- replace(name_fuel_vehicle, name_fuel_vehicle=="HYD", "HY")
+year_vehicle <- as.character(vehicle_df$Year)
+
+### Fuel station accumulative number for the responding records of vehicles
+fuel_vehicle <- mapply(function(Year, type){
      selected_years <- as.numeric(rownames(table_fuel_year)) <= as.numeric(Year)
      fuel_number <- sum(table_fuel_year[selected_years,type])
      return(fuel_number)
      }, 
                         year_vehicle, 
                         as.vector(name_fuel_vehicle))
- 
- fuel_vehicle_add <- mapply(function(Year, type){
+### Fuel station increasing numbers for the responding records of vehicles
+fuel_vehicle_add <- mapply(function(Year, type){
    selected_years <- as.numeric(rownames(table_fuel_year)) == as.numeric(Year)
    fuel_number <- (table_fuel_year[selected_years,type])
    return(fuel_number)
- }, 
- year_vehicle, 
- as.vector(name_fuel_vehicle))
+}, 
+                        year_vehicle, 
+                        as.vector(name_fuel_vehicle))
  
  
- 
+### Mainly calculate the proportion of each type of fuel stations 
+### and add it into the dataframe
   year_total <- as.numeric(tapply(fuel_vehicle, names(fuel_vehicle), sum))
   num_year <- as.numeric(table(names(fuel_vehicle)))
   fenmu <- rep.int(year_total, num_year)
