@@ -10,7 +10,7 @@ key <- "AIzaSyCikL8oIlbvv77sFqclmjt4crRL_08zffk"
 #function to get the geocode of an address
 geocode<-function(add){
   root<-"https://maps.google.com/maps/api/geocode/"
-  url<-paste0(root,"json?address=",add,"&key=AIzaSyC82ht4goSYy9M7Dp9tXc-vO9qxCoeF0jM")
+  url<-paste0(root,"json?address=",add,"&key=AIzaSyBkKLxDDHcVkFczAp3dzXhFjp6w2dZtQmA")
   u<-getURL(URLencode(url))
   u<-fromJSON(u,simplify=FALSE)
   if (u$status=="OK"){

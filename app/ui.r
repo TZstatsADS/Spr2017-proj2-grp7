@@ -6,6 +6,9 @@ library(leaflet)
 library(ggmap)
 library(ggplot2)
 library(shinydashboard)
+library(plotly)
+library(shinyBS)
+
 
 header <- dashboardHeader(
   title = "How New York fill while driving",
@@ -15,9 +18,12 @@ header <- dashboardHeader(
 sidebar<-dashboardSidebar(
   width = 320,
   sidebarMenu(
+ 
+    menuItem("StatAnalysis", tabName = "statanalysis", icon = icon("bar-chart-o")),
+    menuItem("patternanalysis", tabName = "patternanalysis", icon = icon("signal")),
     menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker")),
-    menuItem("StatAnalysis", tabName = "statanalysis", icon = icon("signal"))
-  )
+    menuItem("Appendix", tabName = "appendix",icon=icon("list-alt"))
+    )
 )
 
 body<-dashboardBody(
@@ -101,8 +107,192 @@ body<-dashboardBody(
                             selected ="All")
             ))))),
   
+    
     tabItem(tabName = "statanalysis",
-            h2('This is the tab for statistical analysis'))
+            
+            titlePanel("Analysis of fuel types and costs"),
+            br(),
+            fluidRow(
+              
+              column(3,
+                     #panel1
+                     wellPanel(
+                       
+                       selectizeInput(
+                         'type', 'Select the fuel type you want to compare:', 
+                         choices = totaltype, multiple = TRUE,selected=totaltype)),
+                     wellPanel(
+                       
+                       h4("Comparison of 2 specific vehicles:"),
+                       #panel2
+                       
+                       h4("Vehicle 1:"),
+                       
+                       selectizeInput("make1", label = "Select the manufacturtor:",
+                                      choices = makelist,selected="Audi"),
+                       
+                       uiOutput("model1"),
+                       
+                       h4("Vehicle 2:"),
+                       
+                       selectizeInput("make2", label = "Select the manufacturtor:",
+                                      choices = makelist,selected = "Volvo"),
+                       
+                       uiOutput("model2")
+                       
+                     )
+              ),
+              
+              column(9,
+                     wellPanel(
+                       tabsetPanel(type = "tabs", 
+                                   tabPanel("Save/Spend", plotOutput("savespend"),
+                                            br(),
+                                            helpText("The Save/Spend here refers to by how much you save/spend over 5 years 
+                                                     compared to an average new car. If your 5-year fuel cost is less than average,
+                                                     which means you save money, the amount is positive; otherwise, you spend more than average,
+                                                     the amount is negative. The calculation is based on 45% highway, 55% city driving, 15,000 annual miles and current fuel prices.")), 
+                                   
+                                   
+                                   tabPanel("MPG", plotOutput("mpg"),
+                                            br(),
+                                            helpText("MPG means Mile per Gallon. For electric and CNG vehicles this number
+                                                     is MPGe (gasoline equivalent miles per gallon). MPG deviates on the traffic condition,
+                                                     thus we show a result of city MPG, highway MPG and combined MPG (45% highway, 55% city driving).")
+                                            ), 
+                                   
+                                   
+                                   tabPanel("CO2", plotOutput("co2"),
+                                            
+                                            helpText("CO2 means tailpipe CO2 in grams/mile.")        
+                                   ),
+                                   
+                                   
+                                   tabPanel("Fuel Cost", plotOutput("fuelcost"),
+                                            
+                                            helpText("Annual fuel cost is based on 15,000 miles, 55% city driving, 
+                                                     and the price of fuel used by the vehicle.
+                                                     Fuel prices are from the Energy Information Administration."))
+                                            )
+                                            ),
+                     
+                     wellPanel(tableOutput("table"),
+                               helpText("For single fuel vehicles, there will be only one fuel. 
+                                        For dual fuel vehicles, this will be a conventional fuel (fueltype1) and an alternative fuel (fueltype2)."))
+                               )
+              
+                                            )
+                       
+), 
+
+tabItem(tabName = "appendix,",
+        h2("Appendix"),
+        tableOutput("fuel")
+  
+),
+
+tabItem(tabName = "patternanalysis",
+        ### KAI CHEN is responsible for the tab "StateAnalysis"
+        h2('Trend Analysis'),
+        h4('A tip: \"Map Setting\" and \"Animation Center\" can help you a lot to find an interesting trend!'),
+        
+        fluidRow(
+          
+          tabBox(
+            title = "Results on the quantity",
+            id = "tabset2",
+            width = "12",
+            tabPanel("State Map",solidHeader = TRUE,
+                     plotlyOutput("statecompare1")),
+            tabPanel("State Ranking",solidHeader = TRUE,
+                     textInput("rank_n","Top:",value = "20", width = "100px"),
+                     plotlyOutput("statecompare2")),
+            tabPanel("Overall Trend",solidHeader = TRUE,
+                     plotlyOutput("trend1"))
+            
+          ),
+          
+          
+          tabBox( 
+            title = "Map Settings",
+            # The id lets us use input$tabset1 on the server to find the current tab
+            id = "tabset1", height = "180px", width = 6,
+            # tabPanel( 
+            #   title = "Years", solidHeader = TRUE, 
+            #   sliderInput("range_year", "Range Slider: Choose a range of years: ", 
+            #               min=1970, max=2018, value = c(1970,2018), 1, 
+            #               dragRange = T)),
+            # 
+            
+            
+            tabPanel("Fuels Selections", 
+                     title = "Fuels", solidHeader = T,
+                     radioButtons("fuel_type1", "Choose a type of fuel to analyze", 
+                                  choices = c("ALL","HY","BD","LPG","LNG","ELEC","E85","CNG"), 
+                                  selected = "ALL", inline = TRUE, width = '100%'),
+                     bsTooltip("fuel_type1", "HY: hydrogen<br>BD: biodiesel<br>LPG: liquefied petroleum gas<br>LNG: liquefied natural gas<br> ELEC: electricity<br>E85: 85% ethanol,15% gasoline <br>CNG: compressed natural gas",
+                               "bottom")
+                     
+            ),
+            
+            tabPanel("Scale", 
+                     radioButtons("index_scale", "Choose a way of scaling", 
+                                  choices = c("None","By Areas(km^2)","By Areas(mi^2)"), 
+                                  selected = "None", width = '100%'),
+                     bsTooltip("index_scale", "*By Areas: <br>Show the number of stations per 10000 km^2 or mi^2",
+                               "bottom")
+                     
+            ),
+            tabPanel("Colobar", 
+                     radioButtons("index_aim", "Let colorbar:", 
+                                  choices = c("be fixed",
+                                              "change with the year"
+                                  ), selected = "be fixed", width = '100%'),
+                     bsTooltip("index_aim", "*change with the year: <br>the range of colorbar will change with the year",
+                               "bottom")
+            )
+          ),
+          
+          
+          tabBox( 
+            title = "Animation Center",
+            # The id lets us use input$tabset1 on the server to find the current tab
+            id = "tabset1", height = "180px", width = 6,
+            tabPanel("", 
+                     title = "", solidHeader = TRUE, 
+                     sliderInput("animationslider", "Year control/Animation Play", 
+                                 min=1971, max=2018, value = c(2018), 1, 
+                                 dragRange = T, 
+                                 animate = animationOptions(interval = c(150,300), 
+                                                            loop = F,
+                                                            playButton = "PLAY!"),
+                                 width = "100%"),
+                     
+                     bsTooltip("animationslider", "Click the \"PLAY\" button to see the trend from 1971",
+                               "bottom")
+                     
+            )
+          ),
+          
+          
+          
+          tabBox(
+            
+            title = "Relation with Vehicles",
+            id = "tabset5",
+            width = "12",
+            height = 550,
+            tabPanel("Scatters",solidHeader = TRUE,
+                     plotlyOutput("vehicle_scatter1")),
+            tabPanel("Animation",solidHeader = TRUE,
+                     plotlyOutput("vehicle_animation"))
+            
+          )
+          
+        )
+        
+        
+)
     ))
 
 
