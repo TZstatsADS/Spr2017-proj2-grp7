@@ -52,5 +52,16 @@ fuels=data.frame(FuelName=c("CNG (Compressed Natural Gas)",
 ","      Most gas stations offer three octane levels: regular (about 87), mid-grade (about 89) and premium (91 to 93). Generally, gasoline octane ratings are a measure of how well the fuel mixture can resist pre-ignition or knocking. That is to say, higher rating gasoline (like Premium Gas) can keep engines cleaner due to its detergent additives and produce less pollution.
 "    ))
 
-
+team=data.frame(member=c("Yaqin Li","Kai Chen","Yue Gao","Yi Xiang","Yuxi Zhou"),
+                contribution=c("Team Leads; Presenter; NewYork Alternative Fueling Stations Find Route Algorithm;
+                               Data Cleaning; ShinyApp Design and Debug.",
+                               'Responsible for "Trend Analysis" part, including but not limited to interface and interaction design,
+data gathering and processing, visualizations; Testing and debugging in "Find Route" part.',
+                               "Vehicle data analysis (fuel type analysis, alternative fuel vehicle comparison);
+  Appendix structuring.","	States Route Code Design;
+	ShinyApp Initialization, Find-Route Structuring;
+                               Repo Structuring.",
+                               "	Clean the data of the relationship between vehicles and stations;
+	Help with the establishment of the shiny APP on ui and some functions "
+                               ))
 

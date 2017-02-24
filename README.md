@@ -25,6 +25,8 @@ Term: Spring 2017
 	ShinyApp Design and Debug.
 		
 	+ Kai Chen:
+	Responsible for "Trend Analysis" part, including but not limited to interface and interaction design, data
+	gathering and processing, visualizations; Testing and debugging in "Find Route" part.
 	
   + Yue Gao:
   Vehicle data analysis (fuel type analysis, alternative fuel vehicle comparison);
