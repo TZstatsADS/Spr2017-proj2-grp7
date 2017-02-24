@@ -35,9 +35,20 @@ library(igraph)
 library(geosphere)
 library(data.table)
 library(googleway)
+library(dplyr)
+library(reshape2) 
+library(UScensus2010)
+library(choroplethr)
+
+#if(!require("devtools")) install.packages("devtools")
+#devtools::install_github("ropensci/plotly",force=TRUE)
+
+library(plotly)
+library(tibble)
 
 source("../lib/findpath.R")
 source("../lib/longroute.R")
+source("../lib/Kai_code.R")
 
 station.icon<- icons(
   iconUrl =("../lib/stationpic.png"),
@@ -329,6 +340,190 @@ shinyServer(function(input, output,session) {
       })
     }
     
+  })
+  
+  int_data <- reactive({
+    
+    ### Find selected Years_ ###
+    
+    range_year_v <- c(1970,input$animationslider)
+    selected_years <- (years_total>= range_year_v[1]) & (years_total <= range_year_v[2])
+    selected_years_v <- years_total[selected_years]
+    
+    
+    ### Overall Trend ###
+    
+    #### Create a dataframe: row - year,  column - fuel.type and year
+    table_fuel_year_int <- table_fuel_year[selected_years,]
+    df_fuel_year_int <- data.frame(table_fuel_year_int) 
+    df_fuel_year_int$Year <- factor(rownames(df_fuel_year_int))
+    
+    
+    ### State Trend ###
+    
+    
+    #### Scale by areas if required
+    
+    
+    expl <- ""
+    
+    table_fuel_state_int <- apply(table_grow_afs[, selected_years, ], c(3,1), sum)
+    df_fuel_state_int <- data.frame(table_fuel_state_int)
+    df_fuel_state_int$SUM <- rowSums(df_fuel_state_int)
+    df_fuel_state_int$state <- rownames(df_fuel_state_int)
+    df_fuel_state_int$state2 <- states_full
+    
+    df_color <- data.frame(apply(table_grow_afs, c(3,1), sum))
+    if (input$index_scale == "By Areas(km^2)"|input$index_scale == "By Areas(mi^2)"){
+      df_fuel_state_int[,1:8] <- 10^4 * df_fuel_state_int[,1:8] / df_state_area$Areas_sq_km
+      df_color <- 10^4 * data.frame(apply(table_grow_afs, c(3,1), sum)) / df_state_area$Areas_sq_km
+      expl <- "; Per 10000 km^2"
+      if (input$index_scale == "By Areas(mi^2)"){
+        df_fuel_state_int[,1:8] <- df_fuel_state_int[,1:8] * 2.58999
+        df_color <- df_color * 2.58999
+        expl <- "; Per 10000 mi^2"
+      }
+      ## Delete DC, or the result might be misleading
+      df_fuel_state_int <- df_fuel_state_int[-8,]
+      df_color <- df_color[-8,]
+      
+    }
+    
+    
+    df_color$SUM <- rowSums(df_color)
+    
+    
+    ### Choose a column to compare 
+    if (input$fuel_type1 == "ALL"){
+      df_fuel_state_int$tempt <- df_fuel_state_int[,8]
+      color_max <- max(df_color[,8])
+      colorset <- "YlOrRd"
+    }  
+    
+    else{
+      selected_set <- which(input$fuel_type1 == colnames(df_fuel_state_int))
+      df_fuel_state_int$tempt <- df_fuel_state_int[,selected_set]
+      df_fuel_state_int <- df_fuel_state_int[order(df_fuel_state_int$state2),]
+      color_max <- max(df_color[,selected_set])
+      colorset <- kaicolorset[selected_set]
+      #      colorset <- "Oranges"
+    }
+    
+    
+    
+    
+    
+    if (input$index_aim == "change with the year"){
+      color_max <- max(df_fuel_state_int$tempt)
+      map_aim <- "Mode = Same Year, " 
+    }
+    else
+      map_aim <- "Mode = Accumulation, "
+    
+    
+    
+    # if (input$index_scale == "By number of vehicles"){
+    #   df_fuel_state_int$tempt <- df_fuel_state_int$tempt / df_pop_state$value
+    #   color_max <- max(df_fuel_state_int$tempt)
+    # }
+    
+    
+    if (input$rank_n %in% as.character(1:51)){
+      new_rank_n <- as.numeric(input$rank_n)
+    }
+    else{
+      new_rank_n <- 50
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    state_rank <- order(df_fuel_state_int$tempt, decreasing = T)
+    
+    list(YEAR = selected_years_v, 
+         DATA_trend1 = df_fuel_year_int, 
+         DATA_statecompare = df_fuel_state_int,
+         DATA_ranking = df_fuel_state_int[state_rank,],
+         COLORMAX1 = color_max,
+         COLORMAX2 = colorset,
+         Name_fuel = input$fuel_type1,
+         MAP_SET = map_aim,
+         EXPL = expl,
+         RANK_N = new_rank_n)
+  })
+  
+  
+  output$statecompare1 <- renderPlotly({
+    int_data()$DATA_statecompare %>%
+      plot_geo(locationmode = 'USA-states',
+               hoverinfo = "location+text") %>%
+      ### ALL
+      add_trace(
+        z = ~tempt, text = ~paste(state2,':<br>',tempt), locations = ~state,
+        color = ~tempt, colors = int_data()$COLORMAX2, visible = T, 
+        showscale = T
+      ) %>%
+      colorbar(title = "# Stations",
+               len = 1,
+               limits = c(0.001,int_data()$COLORMAX1)) %>%
+      layout(
+        title = paste('Fuel Stations Distribution<br> Fuel = ', 
+                      int_data()$Name_fuel,int_data()$EXPL),
+        geo = g)
+  })
+  
+  output$statecompare2 <- renderPlotly({
+    
+    int_data()$DATA_ranking %>%
+      plot_ly(x = ~ factor(state, levels = state)[1:int_data()$RANK_N],
+              y = ~tempt[1:int_data()$RANK_N], type = 'bar', text =~factor(state2, levels = state2)[1:int_data()$RANK_N],
+              marker = list(color = ~tempt, colors = int_data()$COLORMAX2,
+                            line = list(color = ~tempt, width = 1.5))) %>%
+      layout(title = paste('State Ranking<br>By type of Fuel = ', 
+                           int_data()$Name_fuel,int_data()$EXPL),
+             xaxis = list(title = ""),
+             yaxis = list(title = "")
+      )
+    
+  })
+  
+  
+  
+  output$trend1 <- renderPlotly({
+    
+    
+    int_data()$DATA_trend1 %>%
+      plot_ly(x = ~Year, y = ~BD, type = 'bar', name = 'BD', visible = T) %>%
+      add_trace(y = ~CNG, name = 'CNG', visible = T) %>%
+      add_trace(y = ~E85, name = 'E85', visible = T) %>%
+      add_trace(y = ~ELEC, name = 'ELEC', visible = T) %>%
+      add_trace(y = ~HY, name = 'HY', visible = T) %>%
+      add_trace(y = ~LNG, name = 'LNG', visible = T) %>%
+      add_trace(y = ~LPG, name = 'LPG', visible = T) %>%
+      
+      layout(
+        title = "Trend of Fuel Stations in USA",
+        xaxis = list(title = ''),
+        yaxis = list(title = '# Alternative Fuel Stations'), 
+        barmode = 'stack'
+        
+      )
+    
+  })
+  
+  output$vehicle_animation <- renderPlotly({
+    p34
+  })
+  
+  output$vehicle_scatter <- renderPlotly({
+    p35
+  })
+  output$vehicle_scatter1 <- renderPlotly({
+    p36
   })
 
 })
