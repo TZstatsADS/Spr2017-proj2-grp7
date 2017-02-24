@@ -51,13 +51,13 @@ source("../lib/longroute.R")
 source("../lib/Kai_code.R")
 
 station.icon<- icons(
-  iconUrl =("../lib/stationpic.png"),
+  iconUrl =("../fig/stationpic.png"),
   iconWidth = 35, iconHeight = 35,
   iconAnchorX = 10, iconAnchorY = 10
 )
 
 station.icon2<- icons(
-  iconUrl =("../lib/stationpic.png"),
+  iconUrl =("../fig/stationpic.png"),
   iconWidth = 15, iconHeight = 15,
   iconAnchorX = 10, iconAnchorY = 10
 )
@@ -66,10 +66,10 @@ station.icon2<- icons(
 # end.icon<-icons("https://s-media-cache-ak0.pinimg.com/564x/d9/7f/ea/d97feac57bebf6007994f6a6286d005b.jpg")
 
 
-start.icon<-icons(iconUrl = "../lib/startpic.png",
+start.icon<-icons(iconUrl = "../fig/startpic.png",
                      iconWidth = 35,iconHeight = 35,
                      iconAnchorX = 22, iconAnchorY = 25)
-end.icon<-makeIcon(iconUrl = "../lib/endpic.png",
+end.icon<-makeIcon(iconUrl = "../fig/endpic.png",
                      iconWidth = 35,iconHeight = 35)
 
 shinyServer(function(input, output,session) { 
