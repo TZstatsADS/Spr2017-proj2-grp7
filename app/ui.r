@@ -34,7 +34,7 @@ sidebar<-dashboardSidebar(
   sidebarMenu(
  
     menuItem("Fuel Analysis", tabName = "statanalysis", icon = icon("bar-chart-o")),
-    menuItem("Pattern Analysis", tabName = "patternanalysis", icon = icon("signal")),
+    menuItem("Trend Analysis", tabName = "patternanalysis", icon = icon("signal")),
     menuItem("RouteFinder", tabName = "routefinder", icon = icon("map-marker")),
     menuItem("Appendix", tabName = "appendix",icon=icon("list-alt"))
     )
@@ -210,21 +210,23 @@ tabItem(tabName = "appendix",
 tabItem(tabName = "patternanalysis",
         ### KAI CHEN is responsible for the tab "StateAnalysis"
         h2('Trend Analysis'),
-        h4('A tip: \"Map Setting\" and \"Animation Center\" can help you a lot to find an interesting trend!'),
-        
+        h4('Based on alternative fuel stations'),
         fluidRow(
           
           tabBox(
-            title = "Results on the quantity",
+            title = "History",
             id = "tabset2",
-            width = "12",
+            width = 9,
+            height = 550,
             tabPanel("State Map",solidHeader = TRUE,
                      plotlyOutput("statecompare1")),
             tabPanel("State Ranking",solidHeader = TRUE,
                      textInput("rank_n","Top:",value = "20", width = "100px"),
                      plotlyOutput("statecompare2")),
             tabPanel("Overall Trend",solidHeader = TRUE,
-                     plotlyOutput("trend1"))
+                     plotlyOutput("trend1")),
+            bsTooltip("tabset2", "A tip: Using \"Map Settings\" and \"Animation Center\" can help you a lot to find an interesting trend!",
+                      "top")
             
           ),
           
@@ -232,7 +234,7 @@ tabItem(tabName = "patternanalysis",
           tabBox( 
             title = "Map Settings",
             # The id lets us use input$tabset1 on the server to find the current tab
-            id = "tabset1", height = "180px", width = 6,
+            id = "tabset1", height = 250, width = 3,
             # tabPanel( 
             #   title = "Years", solidHeader = TRUE, 
             #   sliderInput("range_year", "Range Slider: Choose a range of years: ", 
@@ -241,8 +243,8 @@ tabItem(tabName = "patternanalysis",
             # 
             
             
-            tabPanel("Fuels Selections", 
-                     title = "Fuels", solidHeader = T,
+            tabPanel("Fuels", 
+                    solidHeader = T,
                      radioButtons("fuel_type1", "Choose a type of fuel to analyze", 
                                   choices = c("ALL","HY","BD","LPG","LNG","ELEC","E85","CNG"), 
                                   selected = "ALL", inline = TRUE, width = '100%'),
@@ -273,7 +275,7 @@ tabItem(tabName = "patternanalysis",
           tabBox( 
             title = "Animation Center",
             # The id lets us use input$tabset1 on the server to find the current tab
-            id = "tabset1", height = "180px", width = 6,
+            id = "tabset1", height = "150px", width = 3,
             tabPanel("", 
                      title = "", solidHeader = TRUE, 
                      sliderInput("animationslider", "Year control/Animation Play", 
@@ -296,7 +298,7 @@ tabItem(tabName = "patternanalysis",
             
             title = "Relation with Vehicles",
             id = "tabset5",
-            width = "12",
+            width = 9,
             height = 550,
             tabPanel("Scatters",solidHeader = TRUE,
                      plotlyOutput("vehicle_scatter1")),
