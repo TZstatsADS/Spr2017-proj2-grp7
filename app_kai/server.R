@@ -93,14 +93,19 @@ shinyServer(function(input, output) {
     df_fuel_state_int$state2 <- states_full
     
     df_color <- data.frame(apply(table_grow_afs, c(3,1), sum))
-    if (input$index_scale == "By Areas"){
+    if (input$index_scale == "By Areas(km^2)"|input$index_scale == "By Areas(mi^2)"){
       df_fuel_state_int[,1:8] <- 10^4 * df_fuel_state_int[,1:8] / df_state_area$Areas_sq_km
       df_color <- 10^4 * data.frame(apply(table_grow_afs, c(3,1), sum)) / df_state_area$Areas_sq_km
-      
+      expl <- "; Per 10000 km^2"
+      if (input$index_scale == "By Areas(mi^2)"){
+        df_fuel_state_int[,1:8] <- df_fuel_state_int[,1:8] * 2.58999
+          df_color <- df_color * 2.58999
+          expl <- "; Per 10000 mi^2"
+      }
       ## Delete DC, or the result might be misleading
       df_fuel_state_int <- df_fuel_state_int[-8,]
       df_color <- df_color[-8,]
-      expl <- "; Per 10000 km^2"
+      
     }
     
     
@@ -141,13 +146,14 @@ shinyServer(function(input, output) {
     #   color_max <- max(df_fuel_state_int$tempt)
     # }
     
-
-    
-    
-    if (input$index_scale == "By Population"){
-      df_fuel_state_int$tempt <- df_fuel_state_int$tempt / df_pop_state$value
-      color_max <- max(df_fuel_state_int$tempt)
+  
+    if (input$rank_n %in% as.character(1:51)){
+      new_rank_n <- as.numeric(input$rank_n)
     }
+    else{
+      new_rank_n <- 50
+    }
+      
     
     
     
@@ -165,7 +171,8 @@ shinyServer(function(input, output) {
          COLORMAX2 = colorset,
          Name_fuel = input$fuel_type1,
          MAP_SET = map_aim,
-         EXPL = expl)
+         EXPL = expl,
+         RANK_N = new_rank_n)
   })
 
   
@@ -191,11 +198,11 @@ shinyServer(function(input, output) {
   output$statecompare2 <- renderPlotly({
     
     int_data()$DATA_ranking %>%
-      plot_ly(x = ~ factor(state, levels = state)[1:10],
-              y = ~tempt[1:10], type = 'bar', text =~factor(state, levels = state)[1:10],
-              marker = list(color = 'rgb(58, 107, 107)',
-                            line = list(color = 'rgb(58,48,107)', width = 1.5))) %>%
-      layout(title = paste('Fuel Stations Distribution<br>Fuel = ', 
+      plot_ly(x = ~ factor(state, levels = state)[1:int_data()$RANK_N],
+              y = ~tempt[1:int_data()$RANK_N], type = 'bar', text =~factor(state2, levels = state2)[1:int_data()$RANK_N],
+              marker = list(color = ~tempt, colors = int_data()$COLORMAX2,
+                            line = list(color = ~tempt, width = 1.5))) %>%
+      layout(title = paste('State Ranking<br>By type of Fuel = ', 
                            int_data()$Name_fuel,int_data()$EXPL),
              xaxis = list(title = ""),
              yaxis = list(title = "")
@@ -218,7 +225,7 @@ shinyServer(function(input, output) {
       add_trace(y = ~LPG, name = 'LPG', visible = T) %>%
       
       layout(
-        title = "the Number of Fuel Stations",
+        title = "Trend of Fuel Stations in USA",
         xaxis = list(title = ''),
         yaxis = list(title = '# Alternative Fuel Stations'), 
         barmode = 'stack'
